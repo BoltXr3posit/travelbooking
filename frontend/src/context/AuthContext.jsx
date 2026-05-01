@@ -1,13 +1,16 @@
 import { createContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from './ToastContext'; // <-- 1. Import your custom hook
 
 // Create the vault
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Check if we already have a token saved from a previous visit
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const navigate = useNavigate();
+  
+  // 2. Extract the showToast tool from your new provider
+  const { showToast } = useToast(); 
 
   // The function to talk to your backend engine
   const login = async (email, password) => {
@@ -27,21 +30,20 @@ export const AuthProvider = ({ children }) => {
         setToken(data.token);
         localStorage.setItem('token', data.token);
         
-        // Reroute them to the homepage to book a stay
+        showToast('Welcome back to your luxury portal.', 'success'); // <-- Success Toast!
         navigate('/');
       } else {
-        alert(data.message); // Show them why they were rejected
+        showToast(data.message, 'error'); // <-- Replaced alert
       }
     } catch (error) {
       console.error('Login engine failed:', error);
-      alert('Could not connect to the authentication server.');
+      showToast('Could not connect to the authentication server.', 'error'); // <-- Replaced alert
     }
   };
 
   // The function to create a new VIP account
   const registerUser = async (name, email, password) => {
     try {
-      // NOTE: Make sure this URL matches your live Vercel backend URL!
       const response = await fetch('https://travelbooking-one.vercel.app/api/auth/register', {
         method: 'POST',
         headers: {
@@ -56,13 +58,15 @@ export const AuthProvider = ({ children }) => {
         // Save the VIP pass and log them in immediately
         setToken(data.token);
         localStorage.setItem('token', data.token);
+        
+        showToast('VIP Account created successfully.', 'success'); // <-- Success Toast!
         navigate('/');
       } else {
-        alert(data.message); // Show them why they were rejected (e.g. Email taken)
+        showToast(data.message, 'error'); // <-- Replaced alert
       }
     } catch (error) {
       console.error('Registration engine failed:', error);
-      alert('Could not connect to the authentication server.');
+      showToast('Could not connect to the authentication server.', 'error'); // <-- Replaced alert
     }
   };
 
@@ -70,6 +74,8 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null);
     localStorage.removeItem('token');
+    
+    showToast('You have been securely logged out.', 'success'); // <-- Success Toast!
     navigate('/login');
   };
 
