@@ -11,7 +11,7 @@ const PropertyDetails = () => {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/properties/${id}`);
+        const response = await fetch(`http://travelbooking-one.vercel.app/api/properties/${id}`);
         if (!response.ok) throw new Error('Could not fetch property details');
         const result = await response.json();
         
