@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const Navbar = () => {
   return (
     <nav className="fixed w-full top-0 bg-white/80 backdrop-blur-md shadow-sm z-50">
@@ -13,16 +15,19 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-10 items-center">
-            <a href="#" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Home</a>
-            <a href="#" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Destinations</a>
-            <a href="#" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Experiences</a>
+            <Link to="/" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Home</Link>
+            <Link to="/destinations" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Destinations</Link>
+            <Link to="/experiences" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Experiences</Link>
           </div>
 
           {/* User Actions */}
           <div className="hidden md:flex">
-            <button className="bg-dark text-white px-8 py-2.5 rounded-full hover:bg-gold transition duration-300 tracking-wide text-sm font-medium shadow-md hover:shadow-lg">
+            <Link to="/login" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider mr-4">
               Sign In
-            </button>
+            </Link>
+            <Link to="/register" className="bg-dark text-white px-8 py-2.5 rounded-full hover:bg-gold transition duration-300 tracking-wide text-sm font-medium shadow-md hover:shadow-lg">
+              Register
+            </Link>
           </div>
 
         </div>
