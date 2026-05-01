@@ -21,7 +21,7 @@ const Navbar = () => {
           </div>
 
           {/* User Actions */}
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center"> {/* <-- Added items-center here */}
             <Link to="/login" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider mr-4">
               Sign In
             </Link>
