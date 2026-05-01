@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 const Login = () => {
-  // State to hold the user's input
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  // Extract the engine connection from our vault
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // We will wire this up to your Node.js engine in the next step!
-    console.log('Login attempt:', { email, password });
+    // Fire the engine!
+    login(email, password);
   };
 
   return (
