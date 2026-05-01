@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Extract the registration tool from our vault
+  const { registerUser } = useContext(AuthContext);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // We will wire this up to your Node.js engine in the next step!
-    console.log('Registration attempt:', { name, email, password });
+    // Fire the engine with the user's input!
+    registerUser(name, email, password);
   };
 
   return (

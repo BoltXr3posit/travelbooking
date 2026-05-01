@@ -38,6 +38,34 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // The function to create a new VIP account
+  const registerUser = async (name, email, password) => {
+    try {
+      // NOTE: Make sure this URL matches your live Vercel backend URL!
+      const response = await fetch('https://travelbooking-one.vercel.app/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Save the VIP pass and log them in immediately
+        setToken(data.token);
+        localStorage.setItem('token', data.token);
+        navigate('/');
+      } else {
+        alert(data.message); // Show them why they were rejected (e.g. Email taken)
+      }
+    } catch (error) {
+      console.error('Registration engine failed:', error);
+      alert('Could not connect to the authentication server.');
+    }
+  };
+
   // The function to revoke access
   const logout = () => {
     setToken(null);
@@ -47,7 +75,7 @@ export const AuthProvider = ({ children }) => {
 
   // Provide these tools to the rest of the application
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout, registerUser }}>
       {children}
     </AuthContext.Provider>
   );
