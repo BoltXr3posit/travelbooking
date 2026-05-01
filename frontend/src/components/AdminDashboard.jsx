@@ -4,7 +4,8 @@ import AuthContext from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const AdminDashboard = () => {
-  const { token } = useContext(AuthContext);
+  // 1. Pull userRole from the context vault
+  const { token, userRole } = useContext(AuthContext);
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -25,8 +26,7 @@ const AdminDashboard = () => {
     images: ''     
   });
 
-  // 1. Move fetchProperties ABOVE the useEffect so it's declared before it's used
-  // 1. Fetch Properties Function (Now Memoized!)
+  // 1. Fetch Properties Function (Memoized)
   const fetchProperties = useCallback(async () => {
     try {
       const response = await fetch('https://travelbooking-one.vercel.app/api/properties');
@@ -40,12 +40,20 @@ const AdminDashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [showToast]); // <-- Notice the dependency array added here
+  }, [showToast]); 
 
- // 2. Fetch Properties on Load
+  // 2. Updated Security Bouncer inside useEffect
   useEffect(() => {
+    // Check if logged in at all
     if (!token) {
       navigate('/login');
+      return;
+    }
+
+    // FRONTEND SECURITY: If they aren't an admin, kick them out immediately
+    if (userRole !== 'admin') {
+      showToast('Access denied. Administrators only.', 'error');
+      navigate('/');
       return;
     }
 
@@ -54,7 +62,7 @@ const AdminDashboard = () => {
     };
 
     loadProperties();
-  }, [token, navigate, fetchProperties]); // <-- Added it here!
+  }, [token, userRole, navigate, fetchProperties, showToast]); // Added dependencies
 
   // 3. Handle Form Submission (Create or Update)
   const handleSubmit = async (e) => {
@@ -92,12 +100,12 @@ const AdminDashboard = () => {
       if (response.ok) {
         showToast(`Property ${editingId ? 'updated' : 'added'} successfully!`, 'success');
         closeModal();
-        fetchProperties(); // Refresh the grid
+        fetchProperties(); 
       } else {
         showToast(result.message, 'error');
       }
     } catch (error) {
-      console.error("Submit Error:", error); // <-- Fixed unused var warning
+      console.error("Submit Error:", error); 
       showToast('Network error while saving.', 'error');
     }
   };
@@ -122,7 +130,7 @@ const AdminDashboard = () => {
         showToast(result.message, 'error');
       }
     } catch (error) {
-      console.error("Delete Error:", error); // <-- Fixed unused var warning
+      console.error("Delete Error:", error); 
       showToast('Network error while deleting.', 'error');
     }
   };
