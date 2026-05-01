@@ -28,6 +28,10 @@ const Navbar = () => {
             {token ? (
               // WHAT LOGGED-IN USERS SEE
               <>
+                {/* <-- Added Admin Panel Link Here --> */}
+                <Link to="/admin" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider mr-6 font-medium">
+                  Admin Panel
+                </Link>
                 <Link to="/mybookings" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider mr-6 font-medium">
                   My Bookings
                 </Link>

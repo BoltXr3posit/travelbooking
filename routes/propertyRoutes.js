@@ -1,16 +1,18 @@
 const express = require('express');
-// Import the new getPropertyById function
-const { createProperty, getProperties, getPropertyById } = require('../controllers/propertyController');
+// Import all 5 controller functions
+const { createProperty, getProperties, getPropertyById, updateProperty, deleteProperty } = require('../controllers/propertyController');
+// Import both security guards
+const { protect, adminOnly } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Map the routes to the controller functions
 router.route('/')
-    .get(getProperties)
-    .post(createProperty);
+    .get(getProperties) // Public: Anyone can see the grid
+    .post(protect, adminOnly, createProperty); // Secure: Only Admins can add
 
-// This new route catches requests with an ID parameter (like /api/properties/123)
 router.route('/:id')
-    .get(getPropertyById);
+    .get(getPropertyById) // Public: Anyone can see details
+    .put(protect, adminOnly, updateProperty) // Secure: Only Admins can edit
+    .delete(protect, adminOnly, deleteProperty); // Secure: Only Admins can delete
 
 module.exports = router;

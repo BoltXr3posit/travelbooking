@@ -5,8 +5,9 @@ import PropertyDetails from './components/PropertyDetails';
 import Login from './components/Login';       
 import Register from './components/Register'; 
 import MyBookings from './components/MyBookings';
-import Destinations from './components/Destinations'; // <-- 1. Import Destinations
-import Experiences from './components/Experiences';   // <-- 2. Import Experiences
+import Destinations from './components/Destinations'; 
+import Experiences from './components/Experiences';   
+import AdminDashboard from './components/AdminDashboard'; // <-- 1. Import the Admin Panel
 
 const App = () => {
   return (
@@ -18,10 +19,11 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/mybookings" element={<MyBookings />} /> 
-        
-        {/* <-- 3. Add the two new routes --> */}
         <Route path="/destinations" element={<Destinations />} /> 
         <Route path="/experiences" element={<Experiences />} /> 
+        
+        {/* <-- 2. Add the Admin route here --> */}
+        <Route path="/admin" element={<AdminDashboard />} /> 
       </Routes>
     </div>
   );

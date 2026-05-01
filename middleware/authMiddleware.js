@@ -37,4 +37,18 @@ const protect = async (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+// Add this new function right below your protect function
+const adminOnly = (req, res, next) => {
+    // Check if the user exists and has the admin role
+    if (req.user && req.user.role === 'admin') {
+        next(); // Let them through!
+    } else {
+        res.status(403).json({ 
+            success: false, 
+            message: 'Access denied. You must be an admin to perform this action.' 
+        });
+    }
+};
+
+// Update your exports to include BOTH functions
+module.exports = { protect, adminOnly };
