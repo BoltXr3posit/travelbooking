@@ -11,7 +11,7 @@ const PropertyGrid = () => {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await fetch('http://travelbooking-one.vercel.app/api/properties');
+        const response = await fetch('https://travelbooking-one.vercel.app/api/properties');
         if (!response.ok) {
           throw new Error('Failed to fetch properties from the engine.');
         }
