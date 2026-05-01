@@ -30,10 +30,14 @@ export const AuthProvider = ({ children }) => {
         setToken(data.token);
         localStorage.setItem('token', data.token);
         
-        showToast('Welcome back to your luxury portal.', 'success'); // <-- Success Toast!
-        navigate('/');
+        showToast('Authentication successful.', 'success'); 
+        
+        // Check for a return ticket, default to homepage if none exists
+        const returnUrl = localStorage.getItem('returnTo') || '/';
+        localStorage.removeItem('returnTo'); // Shred the ticket after using it
+        navigate(returnUrl);
       } else {
-        showToast(data.message, 'error'); // <-- Replaced alert
+        showToast(data.message, 'Currently Looking into an issue, Please try again later.'); // <-- Replaced alert
       }
     } catch (error) {
       console.error('Login engine failed:', error);

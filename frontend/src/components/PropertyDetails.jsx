@@ -1,11 +1,45 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const PropertyDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { token } = useContext(AuthContext);
+  const { showToast } = useToast();
+
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // New state to capture user input
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
+
+  const handleReserveClick = (e) => {
+    e.preventDefault();
+    
+    // 1. Did they select dates?
+    if (!checkInDate || !checkOutDate) {
+      return showToast('Please select your check-in and check-out dates.', 'error');
+    }
+
+    // 2. Are they logged in?
+    if (!token) {
+      showToast('Please create an account to secure this reservation.', 'error');
+      // Create the Return Ticket with the current URL!
+      localStorage.setItem('returnTo', location.pathname);
+      navigate('/register');
+      return;
+    }
+
+    // 3. If they are logged in, we are ready to hit the Booking API!
+    showToast('Connecting to booking engine...', 'success');
+    console.log('Ready to book:', { property: id, checkInDate, checkOutDate });
+    // (We will wire the actual backend fetch call next)
+  };
 
   // Fetch the single property data from our newly created backend route
   useEffect(() => {
@@ -83,19 +117,31 @@ const PropertyDetails = () => {
                 <span className="text-gray-500 text-sm tracking-wide"> / night</span>
               </div>
 
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleReserveClick}>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-medium">Check-In</label>
-                    <input type="date" className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50" />
+                    <input 
+                      type="date" 
+                      required
+                      value={checkInDate}
+                      onChange={(e) => setCheckInDate(e.target.value)}
+                      className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-medium">Check-Out</label>
-                    <input type="date" className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50" />
+                    <input 
+                      type="date" 
+                      required
+                      value={checkOutDate}
+                      onChange={(e) => setCheckOutDate(e.target.value)}
+                      className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50" 
+                    />
                   </div>
                 </div>
 
-                <button type="button" className="w-full bg-dark text-white py-4 rounded-full font-bold uppercase tracking-[0.15em] text-sm hover:bg-gold transition duration-300 shadow-lg hover:shadow-xl mt-4">
+                <button type="submit" className="w-full bg-dark text-white py-4 rounded-full font-bold uppercase tracking-[0.15em] text-sm hover:bg-gold transition duration-300 shadow-lg hover:shadow-xl mt-4">
                   Reserve Now
                 </button>
               </form>
