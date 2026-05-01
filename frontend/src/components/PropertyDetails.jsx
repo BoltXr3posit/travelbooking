@@ -18,7 +18,7 @@ const PropertyDetails = () => {
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
 
-  const handleReserveClick = (e) => {
+  const handleReserveClick = async (e) => { // <-- Don't forget to add 'async' here!
     e.preventDefault();
     
     // 1. Did they select dates?
@@ -29,16 +29,45 @@ const PropertyDetails = () => {
     // 2. Are they logged in?
     if (!token) {
       showToast('Please create an account to secure this reservation.', 'error');
-      // Create the Return Ticket with the current URL!
       localStorage.setItem('returnTo', location.pathname);
       navigate('/register');
       return;
     }
 
-    // 3. If they are logged in, we are ready to hit the Booking API!
-    showToast('Connecting to booking engine...', 'success');
-    console.log('Ready to book:', { property: id, checkInDate, checkOutDate });
-    // (We will wire the actual backend fetch call next)
+    // 3. Connect to the Booking Engine!
+    try {
+      showToast('Processing your reservation...', 'success'); // A nice initial message
+      
+      const response = await fetch('https://travelbooking-one.vercel.app/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // <-- This is the velvet rope! We pass the VIP token.
+        },
+        body: JSON.stringify({
+          property: id,
+          checkInDate,
+          checkOutDate
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showToast('Reservation secured successfully! Welcome to luxury.', 'success');
+        
+        // Let's teleport them to their new dashboard so they can see the booking
+        setTimeout(() => {
+          navigate('/mybookings');
+        }, 1500); 
+      } else {
+        // If the backend rejects it (e.g. check-out date is before check-in date)
+        showToast(data.message, 'error');
+      }
+    } catch (error) {
+      console.error('Booking failed:', error);
+      showToast('Could not process reservation. Please try again.', 'error');
+    }
   };
 
   // Fetch the single property data from our newly created backend route
