@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>travelbooking - Main Source Export</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .page-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 { margin: 0 0 10px 0; color: #111827; }
+        .header p { margin: 5px 0; color: #6b7280; }
+        
+        .analytics-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-card h3 { margin: 0 0 5px 0; font-size: 28px; color: #4f46e5; }
+        .stat-card p { margin: 0; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; }
+        .lang-bar {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            display: flex;
+            overflow: hidden;
+            background-color: #e5e7eb;
+        }
+        .lang-segment { height: 100%; transition: opacity 0.2s; cursor: pointer; }
+        .lang-segment:hover { opacity: 0.8; }
+        .lang-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+        .legend-color { width: 12px; height: 12px; border-radius: 3px; }
+
+        .cross-link-banner {
+            background-color: #e0e7ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cross-link-banner a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .cross-link-banner a:hover { text-decoration: underline; }
+        
+        .directory-tree {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 40px;
+        }
+        .tree-link {
+            color: #2563eb;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
+        .tree-link:hover { text-decoration: underline; color: #1d4ed8; }
+        #side-nav .tree-link.active {
+            color: #4f46e5;
+            font-weight: bold;
+            background-color: #e0e7ff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: -8px;
+            text-decoration: none;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .file-section {
+            margin-bottom: 40px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            scroll-margin-top: 20px; 
+        }
+        .file-header {
+            background-color: #1f2937;
+            color: #f3f4f6;
+            padding: 10px 15px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* --- Minimap Outline CSS --- */
+        .file-outline {
+            background-color: #374151;
+            border-top: 1px solid #4b5563;
+            border-bottom: 1px solid #111827;
+            padding: 8px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #6b7280 #374151;
+        }
+        .file-outline::-webkit-scrollbar { height: 6px; }
+        .file-outline::-webkit-scrollbar-track { background: #374151; }
+        .file-outline::-webkit-scrollbar-thumb { background-color: #6b7280; border-radius: 3px; }
+        
+        .outline-title {
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: bold;
+            padding-top: 3px;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .outline-pills {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+        .outline-pill {
+            background-color: #4b5563;
+            color: #e5e7eb;
+            font-family: monospace;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .outline-pill:hover {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #60a5fa;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        }
+
+        .copy-btn {
+            background: #374151;
+            color: #d1d5db;
+            border: 1px solid #4b5563;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { background: #4b5563; color: white; }
+        .copy-btn.success { background: #059669; border-color: #059669; color: white; }
+
+        pre {
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        code {
+            font-family: "Fira Code", "Courier New", Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5; /* Explicit line-height is crucial for accurate scrolling math */
+            padding: 20px !important;
+            display: block;
+        }
+
+        .side-nav {
+            position: fixed;
+            top: 0;
+            right: -350px; 
+            width: 320px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.05);
+            border-left: 1px solid #e5e7eb;
+            overflow-y: auto;
+            transition: right 0.3s ease-in-out;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+        .side-nav.visible { right: 0; }
+        .side-nav h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #111827;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        
+        .back-to-top {
+            display: block;
+            background-color: #1f2937;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+        .back-to-top:hover { background-color: #374151; color: #ffffff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="header">
+            <h1>Project: travelbooking</h1>
+            <p><strong>Project Author:</strong> KunaiDev</p>
+            <p><strong>Date:</strong> 5/1/2026, 10:58:57 AM</p>
+        </div>
+        
+        
+        <div class="analytics-dashboard">
+            <div class="stat-card">
+                <h3>33</h3>
+                <p>Total Files</p>
+            </div>
+            <div class="stat-card">
+                <h3>923</h3>
+                <p>Lines of Code</p>
+            </div>
+            <div class="stat-card" style="grid-column: 1 / -1;">
+                <p style="margin-bottom: 10px; text-align: left;">Language Breakdown (by LOC)</p>
+                <div class="lang-bar"><div class="lang-segment" style="width: 58.9%; background-color: #3b82f6;" title="JavaScript: 58.9% (544 lines)"></div><div class="lang-segment" style="width: 26.9%; background-color: #10b981;" title="React: 26.9% (248 lines)"></div><div class="lang-segment" style="width: 6.5%; background-color: #f59e0b;" title="JSON: 6.5% (60 lines)"></div><div class="lang-segment" style="width: 3.1%; background-color: #ef4444;" title="SVG: 3.1% (29 lines)"></div><div class="lang-segment" style="width: 1.8%; background-color: #8b5cf6;" title="Markdown: 1.8% (17 lines)"></div><div class="lang-segment" style="width: 1.5%; background-color: #ec4899;" title="HTML: 1.5% (14 lines)"></div><div class="lang-segment" style="width: 1.1%; background-color: #14b8a6;" title="CSS: 1.1% (10 lines)"></div></div>
+                <div class="lang-legend">
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #3b82f6;"></span>
+                    <span class="legend-text">JavaScript <span style="color:#9ca3af;">58.9%</span></span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #10b981;"></span>
+                    <span class="legend-text">React <span style="color:#9ca3af;">26.9%</span></span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #f59e0b;"></span>
+                    <span class="legend-text">JSON <span style="color:#9ca3af;">6.5%</span></span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #ef4444;"></span>
+                    <span class="legend-text">SVG <span style="color:#9ca3af;">3.1%</span></span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #8b5cf6;"></span>
+                    <span class="legend-text">Markdown <span style="color:#9ca3af;">1.8%</span></span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #ec4899;"></span>
+                    <span class="legend-text">HTML <span style="color:#9ca3af;">1.5%</span></span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background-color: #14b8a6;"></span>
+                    <span class="legend-text">CSS <span style="color:#9ca3af;">1.1%</span></span>
+                </div></div>
+            </div>
+        </div>
+    
+        
+
+        <h2>Directory Structure</h2>
+        <div class="directory-tree">📁 config/
+  <a href="#file-config-db-js" class="tree-link">📄 db.js</a>
+📁 controllers/
+  <a href="#file-controllers-authController-js" class="tree-link">📄 authController.js</a>
+  <a href="#file-controllers-bookingController-js" class="tree-link">📄 bookingController.js</a>
+  <a href="#file-controllers-propertyController-js" class="tree-link">📄 propertyController.js</a>
+📁 frontend/
+  <a href="#file-frontend-eslint-config-js" class="tree-link">📄 eslint.config.js</a>
+  <a href="#file-frontend-index-html" class="tree-link">📄 index.html</a>
+  <a href="#file-frontend-package-json" class="tree-link">📄 package.json</a>
+  📁 public/
+    <a href="#file-frontend-public-favicon-svg" class="tree-link">📄 favicon.svg</a>
+    <a href="#file-frontend-public-icons-svg" class="tree-link">📄 icons.svg</a>
+  <a href="#file-frontend-README-md" class="tree-link">📄 README.md</a>
+  📁 src/
+    <a href="#file-frontend-src-App-jsx" class="tree-link">📄 App.jsx</a>
+    📁 assets/
+      <a href="#file-frontend-src-assets-react-svg" class="tree-link">📄 react.svg</a>
+      <a href="#file-frontend-src-assets-vite-svg" class="tree-link">📄 vite.svg</a>
+    📁 components/
+      <a href="#file-frontend-src-components-Hero-jsx" class="tree-link">📄 Hero.jsx</a>
+      <a href="#file-frontend-src-components-Home-jsx" class="tree-link">📄 Home.jsx</a>
+      <a href="#file-frontend-src-components-Navbar-jsx" class="tree-link">📄 Navbar.jsx</a>
+      <a href="#file-frontend-src-components-PropertyDetails-jsx" class="tree-link">📄 PropertyDetails.jsx</a>
+      <a href="#file-frontend-src-components-PropertyGrid-jsx" class="tree-link">📄 PropertyGrid.jsx</a>
+    <a href="#file-frontend-src-index-css" class="tree-link">📄 index.css</a>
+    <a href="#file-frontend-src-main-jsx" class="tree-link">📄 main.jsx</a>
+  <a href="#file-frontend-vite-config-js" class="tree-link">📄 vite.config.js</a>
+📁 middleware/
+  <a href="#file-middleware-authMiddleware-js" class="tree-link">📄 authMiddleware.js</a>
+📁 models/
+  <a href="#file-models-Booking-js" class="tree-link">📄 Booking.js</a>
+  <a href="#file-models-Property-js" class="tree-link">📄 Property.js</a>
+  <a href="#file-models-User-js" class="tree-link">📄 User.js</a>
+<a href="#file-package-json" class="tree-link">📄 package.json</a>
+📁 routes/
+  <a href="#file-routes-authRoutes-js" class="tree-link">📄 authRoutes.js</a>
+  <a href="#file-routes-bookingRoutes-js" class="tree-link">📄 bookingRoutes.js</a>
+  <a href="#file-routes-propertyRoutes-js" class="tree-link">📄 propertyRoutes.js</a>
+<a href="#file-seeder-js" class="tree-link">📄 seeder.js</a>
+<a href="#file-server-js" class="tree-link">📄 server.js</a>
+<a href="#file-Tasks-TODO" class="tree-link">📄 Tasks.TODO</a>
+<a href="#file-testAuth-js" class="tree-link">📄 testAuth.js</a>
+</div>
+        <h2 id="source-code-header">Source Code</h2>
+        
+        <div class="file-section" id="file-config-db-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 db.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(config/db.js • 13 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-config-db-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-config-db-js', 2)">connectDB</span></div>
+                                                </div>
+            <pre><code id="code-file-config-db-js">const mongoose = require(&#039;mongoose&#039;);
+
+const connectDB = async () =&gt; {
+    try {
+        const conn = await mongoose.connect(process.env.MONGO_URI);
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+        console.error(`Error connecting to MongoDB: ${error.message}`);
+        process.exit(1); // Exit the process with a failure code so it doesn&#039;t hang
+    }
+};
+
+module.exports = connectDB;</code></pre>
+        </div>
+        <div class="file-section" id="file-controllers-authController-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 authController.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(controllers/authController.js • 67 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-controllers-authController-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-controllers-authController-js', 3)">sendTokenResponse</span><span class="outline-pill" onclick="scrollToLine('file-controllers-authController-js', 16)">register</span><span class="outline-pill" onclick="scrollToLine('file-controllers-authController-js', 37)">login</span></div>
+                                                </div>
+            <pre><code id="code-file-controllers-authController-js">const User = require(&#039;../models/User&#039;);
+
+// Helper function to get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res) =&gt; {
+    // Create token
+    const token = user.getSignedJwtToken();
+
+    res.status(statusCode).json({
+        success: true,
+        token
+    });
+};
+
+// @desc    Register a new user
+// @route   POST /api/auth/register
+// @access  Public
+const register = async (req, res) =&gt; {
+    try {
+        const { name, email, password, role } = req.body;
+
+        // Create the user
+        const user = await User.create({
+            name,
+            email,
+            password,
+            role
+        });
+
+        sendTokenResponse(user, 201, res);
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
+const login = async (req, res) =&gt; {
+    try {
+        const { email, password } = req.body;
+
+        // Validate email and password inputs
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: &#039;Please provide an email and password&#039; });
+        }
+
+        // Check for user (we have to explicitly select the password because we hid it in the model)
+        const user = await User.findOne({ email }).select(&#039;+password&#039;);
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: &#039;Invalid credentials&#039; });
+        }
+
+        // Check if password matches
+        const isMatch = await user.matchPassword(password);
+
+        if (!isMatch) {
+            return res.status(401).json({ success: false, message: &#039;Invalid credentials&#039; });
+        }
+
+        sendTokenResponse(user, 200, res);
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { register, login };</code></pre>
+        </div>
+        <div class="file-section" id="file-controllers-bookingController-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 bookingController.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(controllers/bookingController.js • 74 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-controllers-bookingController-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-controllers-bookingController-js', 6)">createBooking</span><span class="outline-pill" onclick="scrollToLine('file-controllers-bookingController-js', 54)">getMyBookings</span></div>
+                                                </div>
+            <pre><code id="code-file-controllers-bookingController-js">const Booking = require(&#039;../models/Booking&#039;);
+const Property = require(&#039;../models/Property&#039;);
+
+// @desc    Create a new booking
+// @route   POST /api/bookings
+// @access  Private (Requires the user to be logged in)
+const createBooking = async (req, res) =&gt; {
+    try {
+        const { property, checkInDate, checkOutDate } = req.body;
+
+        // 1. Verify the property actually exists
+        const propertyExists = await Property.findById(property);
+        if (!propertyExists) {
+            return res.status(404).json({ success: false, message: &#039;Property not found&#039; });
+        }
+
+        // 2. Calculate the number of nights
+        const checkIn = new Date(checkInDate);
+        const checkOut = new Date(checkOutDate);
+        
+        // Calculate the difference in milliseconds and convert to days
+        const timeDifference = checkOut.getTime() - checkIn.getTime();
+        const numberOfNights = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+        if (numberOfNights &lt;= 0) {
+            return res.status(400).json({ success: false, message: &#039;Check-out date must be after check-in date&#039; });
+        }
+
+        // 3. Calculate the total price
+        const totalPrice = numberOfNights * propertyExists.basePrice;
+
+        // 4. Create the booking record
+        // Note: req.user.id will be provided by our Auth Middleware, which we will build next!
+        const booking = await Booking.create({
+            property,
+            user: req.user.id, 
+            checkInDate,
+            checkOutDate,
+            totalPrice
+        });
+
+        res.status(201).json({
+            success: true,
+            data: booking
+        });
+
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Get all bookings for the logged-in user
+// @route   GET /api/bookings/mybookings
+// @access  Private
+const getMyBookings = async (req, res) =&gt; {
+    try {
+        // Find all bookings where the user ID matches the currently logged-in user
+        // We also &quot;populate&quot; the property field so we get the lodge details, not just its ID
+        const bookings = await Booking.find({ user: req.user.id }).populate({
+            path: &#039;property&#039;,
+            select: &#039;title location images&#039;
+        });
+
+        res.status(200).json({
+            success: true,
+            count: bookings.length,
+            data: bookings
+        });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { createBooking, getMyBookings };</code></pre>
+        </div>
+        <div class="file-section" id="file-controllers-propertyController-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 propertyController.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(controllers/propertyController.js • 40 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-controllers-propertyController-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-controllers-propertyController-js', 5)">createProperty</span><span class="outline-pill" onclick="scrollToLine('file-controllers-propertyController-js', 23)">getProperties</span></div>
+                                                </div>
+            <pre><code id="code-file-controllers-propertyController-js">const Property = require(&#039;../models/Property&#039;);
+
+// @desc    Create a new luxury property
+// @route   POST /api/properties
+// @access  Public (We will restrict this to admins later)
+const createProperty = async (req, res) =&gt; {
+    try {
+        const property = await Property.create(req.body);
+        res.status(201).json({ 
+            success: true, 
+            data: property 
+        });
+    } catch (error) {
+        res.status(400).json({ 
+            success: false, 
+            message: error.message 
+        });
+    }
+};
+
+// @desc    Get all properties
+// @route   GET /api/properties
+// @access  Public
+const getProperties = async (req, res) =&gt; {
+    try {
+        const properties = await Property.find();
+        res.status(200).json({ 
+            success: true, 
+            count: properties.length,
+            data: properties 
+        });
+    } catch (error) {
+        res.status(400).json({ 
+            success: false, 
+            message: error.message 
+        });
+    }
+};
+
+module.exports = { createProperty, getProperties };</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-eslint-config-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 eslint.config.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/eslint.config.js • 22 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-eslint-config-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-eslint-config-js">import js from &#039;@eslint/js&#039;
+import globals from &#039;globals&#039;
+import reactHooks from &#039;eslint-plugin-react-hooks&#039;
+import reactRefresh from &#039;eslint-plugin-react-refresh&#039;
+import { defineConfig, globalIgnores } from &#039;eslint/config&#039;
+
+export default defineConfig([
+  globalIgnores([&#039;dist&#039;]),
+  {
+    files: [&#039;**/*.{js,jsx}&#039;],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
+])
+</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-index-html">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 index.html 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/index.html • 14 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-index-html')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-index-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;link rel=&quot;icon&quot; type=&quot;image/svg+xml&quot; href=&quot;/favicon.svg&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;frontend&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;
+    &lt;script type=&quot;module&quot; src=&quot;/src/main.jsx&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-package-json">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 package.json 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/package.json • 33 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-package-json')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-package-json">{
+  &quot;name&quot;: &quot;frontend&quot;,
+  &quot;private&quot;: true,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;vite build&quot;,
+    &quot;lint&quot;: &quot;eslint .&quot;,
+    &quot;preview&quot;: &quot;vite preview&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;react&quot;: &quot;^19.2.5&quot;,
+    &quot;react-dom&quot;: &quot;^19.2.5&quot;,
+    &quot;react-router-dom&quot;: &quot;^7.14.2&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@eslint/js&quot;: &quot;^10.0.1&quot;,
+    &quot;@tailwindcss/vite&quot;: &quot;^4.2.4&quot;,
+    &quot;@types/react&quot;: &quot;^19.2.14&quot;,
+    &quot;@types/react-dom&quot;: &quot;^19.2.3&quot;,
+    &quot;@vitejs/plugin-react&quot;: &quot;^6.0.1&quot;,
+    &quot;autoprefixer&quot;: &quot;^10.5.0&quot;,
+    &quot;eslint&quot;: &quot;^10.2.1&quot;,
+    &quot;eslint-plugin-react-hooks&quot;: &quot;^7.1.1&quot;,
+    &quot;eslint-plugin-react-refresh&quot;: &quot;^0.5.2&quot;,
+    &quot;globals&quot;: &quot;^17.5.0&quot;,
+    &quot;postcss&quot;: &quot;^8.5.13&quot;,
+    &quot;tailwindcss&quot;: &quot;^4.2.4&quot;,
+    &quot;vite&quot;: &quot;^8.0.10&quot;
+  }
+}
+</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-public-favicon-svg">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 favicon.svg 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/public/favicon.svg • 1 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-public-favicon-svg')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-public-favicon-svg">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;48&quot; height=&quot;46&quot; fill=&quot;none&quot; viewBox=&quot;0 0 48 46&quot;&gt;&lt;path fill=&quot;#863bff&quot; d=&quot;M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z&quot; style=&quot;fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1&quot;/&gt;&lt;mask id=&quot;a&quot; width=&quot;48&quot; height=&quot;46&quot; x=&quot;0&quot; y=&quot;0&quot; maskUnits=&quot;userSpaceOnUse&quot; style=&quot;mask-type:alpha&quot;&gt;&lt;path fill=&quot;#000&quot; d=&quot;M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z&quot; style=&quot;fill:#000;fill-opacity:1&quot;/&gt;&lt;/mask&gt;&lt;g mask=&quot;url(#a)&quot;&gt;&lt;g filter=&quot;url(#b)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;14.704&quot; fill=&quot;#ede6ff&quot; rx=&quot;5.508&quot; ry=&quot;14.704&quot; style=&quot;fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1&quot; transform=&quot;matrix(.00324 1 1 -.00324 -4.47 31.516)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#c)&quot;&gt;&lt;ellipse cx=&quot;10.399&quot; cy=&quot;29.851&quot; fill=&quot;#ede6ff&quot; rx=&quot;10.399&quot; ry=&quot;29.851&quot; style=&quot;fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1&quot; transform=&quot;matrix(.00324 1 1 -.00324 -39.328 7.883)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#d)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;30.487&quot; fill=&quot;#7e14ff&quot; rx=&quot;5.508&quot; ry=&quot;30.487&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(89.814 -25.913 -14.639)scale(1 -1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#e)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;30.599&quot; fill=&quot;#7e14ff&quot; rx=&quot;5.508&quot; ry=&quot;30.599&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(89.814 -32.644 -3.334)scale(1 -1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#f)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;30.599&quot; fill=&quot;#7e14ff&quot; rx=&quot;5.508&quot; ry=&quot;30.599&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;matrix(.00324 1 1 -.00324 -34.34 30.47)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#g)&quot;&gt;&lt;ellipse cx=&quot;14.072&quot; cy=&quot;22.078&quot; fill=&quot;#ede6ff&quot; rx=&quot;14.072&quot; ry=&quot;22.078&quot; style=&quot;fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1&quot; transform=&quot;rotate(93.35 24.506 48.493)scale(-1 1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#h)&quot;&gt;&lt;ellipse cx=&quot;3.47&quot; cy=&quot;21.501&quot; fill=&quot;#7e14ff&quot; rx=&quot;3.47&quot; ry=&quot;21.501&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(89.009 28.708 47.59)scale(-1 1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#i)&quot;&gt;&lt;ellipse cx=&quot;3.47&quot; cy=&quot;21.501&quot; fill=&quot;#7e14ff&quot; rx=&quot;3.47&quot; ry=&quot;21.501&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(89.009 28.708 47.59)scale(-1 1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#j)&quot;&gt;&lt;ellipse cx=&quot;.387&quot; cy=&quot;8.972&quot; fill=&quot;#7e14ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(39.51 .387 8.972)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#k)&quot;&gt;&lt;ellipse cx=&quot;47.523&quot; cy=&quot;-6.092&quot; fill=&quot;#7e14ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(37.892 47.523 -6.092)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#l)&quot;&gt;&lt;ellipse cx=&quot;41.412&quot; cy=&quot;6.333&quot; fill=&quot;#47bfff&quot; rx=&quot;5.971&quot; ry=&quot;9.665&quot; style=&quot;fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1&quot; transform=&quot;rotate(37.892 41.412 6.333)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#m)&quot;&gt;&lt;ellipse cx=&quot;-1.879&quot; cy=&quot;38.332&quot; fill=&quot;#7e14ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(37.892 -1.88 38.332)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#n)&quot;&gt;&lt;ellipse cx=&quot;-1.879&quot; cy=&quot;38.332&quot; fill=&quot;#7e14ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(37.892 -1.88 38.332)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#o)&quot;&gt;&lt;ellipse cx=&quot;35.651&quot; cy=&quot;29.907&quot; fill=&quot;#7e14ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; style=&quot;fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1&quot; transform=&quot;rotate(37.892 35.651 29.907)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#p)&quot;&gt;&lt;ellipse cx=&quot;38.418&quot; cy=&quot;32.4&quot; fill=&quot;#47bfff&quot; rx=&quot;5.971&quot; ry=&quot;15.297&quot; style=&quot;fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1&quot; transform=&quot;rotate(37.892 38.418 32.4)&quot;/&gt;&lt;/g&gt;&lt;/g&gt;&lt;defs&gt;&lt;filter id=&quot;b&quot; width=&quot;60.045&quot; height=&quot;41.654&quot; x=&quot;-19.77&quot; y=&quot;16.149&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;7.659&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;c&quot; width=&quot;90.34&quot; height=&quot;51.437&quot; x=&quot;-54.613&quot; y=&quot;-7.533&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;7.659&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;d&quot; width=&quot;79.355&quot; height=&quot;29.4&quot; x=&quot;-49.64&quot; y=&quot;2.03&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;e&quot; width=&quot;79.579&quot; height=&quot;29.4&quot; x=&quot;-45.045&quot; y=&quot;20.029&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;f&quot; width=&quot;79.579&quot; height=&quot;29.4&quot; x=&quot;-43.513&quot; y=&quot;21.178&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;g&quot; width=&quot;74.749&quot; height=&quot;58.852&quot; x=&quot;15.756&quot; y=&quot;-17.901&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;7.659&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;h&quot; width=&quot;61.377&quot; height=&quot;25.362&quot; x=&quot;23.548&quot; y=&quot;2.284&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;i&quot; width=&quot;61.377&quot; height=&quot;25.362&quot; x=&quot;23.548&quot; y=&quot;2.284&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;j&quot; width=&quot;56.045&quot; height=&quot;63.649&quot; x=&quot;-27.636&quot; y=&quot;-22.853&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;k&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;20.116&quot; y=&quot;-38.415&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;l&quot; width=&quot;33.541&quot; height=&quot;35.313&quot; x=&quot;24.641&quot; y=&quot;-11.323&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;m&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;-29.286&quot; y=&quot;6.009&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;n&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;-29.286&quot; y=&quot;6.009&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;o&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;8.244&quot; y=&quot;-2.416&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;p&quot; width=&quot;39.409&quot; height=&quot;43.623&quot; x=&quot;18.713&quot; y=&quot;10.588&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17158&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;/defs&gt;&lt;/svg&gt;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-public-icons-svg">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 icons.svg 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/public/icons.svg • 25 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-public-icons-svg')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-public-icons-svg">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;
+  &lt;symbol id=&quot;bluesky-icon&quot; viewBox=&quot;0 0 16 17&quot;&gt;
+    &lt;g clip-path=&quot;url(#bluesky-clip)&quot;&gt;&lt;path fill=&quot;#08060d&quot; d=&quot;M7.75 7.735c-.693-1.348-2.58-3.86-4.334-5.097-1.68-1.187-2.32-.981-2.74-.79C.188 2.065.1 2.812.1 3.251s.241 3.602.398 4.13c.52 1.744 2.367 2.333 4.07 2.145-2.495.37-4.71 1.278-1.805 4.512 3.196 3.309 4.38-.71 4.987-2.746.608 2.036 1.307 5.91 4.93 2.746 2.72-2.746.747-4.143-1.747-4.512 1.702.189 3.55-.4 4.07-2.145.156-.528.397-3.691.397-4.13s-.088-1.186-.575-1.406c-.42-.19-1.06-.395-2.741.79-1.755 1.24-3.64 3.752-4.334 5.099&quot;/&gt;&lt;/g&gt;
+    &lt;defs&gt;&lt;clipPath id=&quot;bluesky-clip&quot;&gt;&lt;path fill=&quot;#fff&quot; d=&quot;M.1.85h15.3v15.3H.1z&quot;/&gt;&lt;/clipPath&gt;&lt;/defs&gt;
+  &lt;/symbol&gt;
+  &lt;symbol id=&quot;discord-icon&quot; viewBox=&quot;0 0 20 19&quot;&gt;
+    &lt;path fill=&quot;#08060d&quot; d=&quot;M16.224 3.768a14.5 14.5 0 0 0-3.67-1.153c-.158.286-.343.67-.47.976a13.5 13.5 0 0 0-4.067 0c-.128-.306-.317-.69-.476-.976A14.4 14.4 0 0 0 3.868 3.77C1.546 7.28.916 10.703 1.231 14.077a14.7 14.7 0 0 0 4.5 2.306q.545-.748.965-1.587a9.5 9.5 0 0 1-1.518-.74q.191-.14.372-.293c2.927 1.369 6.107 1.369 8.999 0q.183.152.372.294-.723.437-1.52.74.418.838.963 1.588a14.6 14.6 0 0 0 4.504-2.308c.37-3.911-.63-7.302-2.644-10.309m-9.13 8.234c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.894 0 1.614.82 1.599 1.82.001 1-.705 1.82-1.6 1.82m5.91 0c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.893 0 1.614.82 1.599 1.82 0 1-.706 1.82-1.6 1.82&quot;/&gt;
+  &lt;/symbol&gt;
+  &lt;symbol id=&quot;documentation-icon&quot; viewBox=&quot;0 0 21 20&quot;&gt;
+    &lt;path fill=&quot;none&quot; stroke=&quot;#aa3bff&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.35&quot; d=&quot;m15.5 13.333 1.533 1.322c.645.555.967.833.967 1.178s-.322.623-.967 1.179L15.5 18.333m-3.333-5-1.534 1.322c-.644.555-.966.833-.966 1.178s.322.623.966 1.179l1.534 1.321&quot;/&gt;
+    &lt;path fill=&quot;none&quot; stroke=&quot;#aa3bff&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.35&quot; d=&quot;M17.167 10.836v-4.32c0-1.41 0-2.117-.224-2.68-.359-.906-1.118-1.621-2.08-1.96-.599-.21-1.349-.21-2.848-.21-2.623 0-3.935 0-4.983.369-1.684.591-3.013 1.842-3.641 3.428C3 6.449 3 7.684 3 10.154v2.122c0 2.558 0 3.838.706 4.726q.306.383.713.671c.76.536 1.79.64 3.581.66&quot;/&gt;
+    &lt;path fill=&quot;none&quot; stroke=&quot;#aa3bff&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.35&quot; d=&quot;M3 10a2.78 2.78 0 0 1 2.778-2.778c.555 0 1.209.097 1.748-.047.48-.129.854-.503.982-.982.145-.54.048-1.194.048-1.749a2.78 2.78 0 0 1 2.777-2.777&quot;/&gt;
+  &lt;/symbol&gt;
+  &lt;symbol id=&quot;github-icon&quot; viewBox=&quot;0 0 19 19&quot;&gt;
+    &lt;path fill=&quot;#08060d&quot; fill-rule=&quot;evenodd&quot; d=&quot;M9.356 1.85C5.05 1.85 1.57 5.356 1.57 9.694a7.84 7.84 0 0 0 5.324 7.44c.387.079.528-.168.528-.376 0-.182-.013-.805-.013-1.454-2.165.467-2.616-.935-2.616-.935-.349-.91-.864-1.143-.864-1.143-.71-.48.051-.48.051-.48.787.051 1.2.805 1.2.805.695 1.194 1.817.857 2.268.649.064-.507.27-.857.49-1.052-1.728-.182-3.545-.857-3.545-3.87 0-.857.31-1.558.8-2.104-.078-.195-.349-1 .077-2.078 0 0 .657-.208 2.14.805a7.5 7.5 0 0 1 1.946-.26c.657 0 1.328.092 1.946.26 1.483-1.013 2.14-.805 2.14-.805.426 1.078.155 1.883.078 2.078.502.546.799 1.247.799 2.104 0 3.013-1.818 3.675-3.558 3.87.284.247.528.714.528 1.454 0 1.052-.012 1.896-.012 2.156 0 .208.142.455.528.377a7.84 7.84 0 0 0 5.324-7.441c.013-4.338-3.48-7.844-7.773-7.844&quot; clip-rule=&quot;evenodd&quot;/&gt;
+  &lt;/symbol&gt;
+  &lt;symbol id=&quot;social-icon&quot; viewBox=&quot;0 0 20 20&quot;&gt;
+    &lt;path fill=&quot;none&quot; stroke=&quot;#aa3bff&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.35&quot; d=&quot;M12.5 6.667a4.167 4.167 0 1 0-8.334 0 4.167 4.167 0 0 0 8.334 0&quot;/&gt;
+    &lt;path fill=&quot;none&quot; stroke=&quot;#aa3bff&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;1.35&quot; d=&quot;M2.5 16.667a5.833 5.833 0 0 1 8.75-5.053m3.837.474.513 1.035c.07.144.257.282.414.309l.93.155c.596.1.736.536.307.965l-.723.73a.64.64 0 0 0-.152.531l.207.903c.164.715-.213.991-.84.618l-.872-.52a.63.63 0 0 0-.577 0l-.872.52c-.624.373-1.003.094-.84-.618l.207-.903a.64.64 0 0 0-.152-.532l-.723-.729c-.426-.43-.289-.864.306-.964l.93-.156a.64.64 0 0 0 .412-.31l.513-1.034c.28-.562.735-.562 1.012 0&quot;/&gt;
+  &lt;/symbol&gt;
+  &lt;symbol id=&quot;x-icon&quot; viewBox=&quot;0 0 19 19&quot;&gt;
+    &lt;path fill=&quot;#08060d&quot; fill-rule=&quot;evenodd&quot; d=&quot;M1.893 1.98c.052.072 1.245 1.769 2.653 3.77l2.892 4.114c.183.261.333.48.333.486s-.068.089-.152.183l-.522.593-.765.867-3.597 4.087c-.375.426-.734.834-.798.905a1 1 0 0 0-.118.148c0 .01.236.017.664.017h.663l.729-.83c.4-.457.796-.906.879-.999a692 692 0 0 0 1.794-2.038c.034-.037.301-.34.594-.675l.551-.624.345-.392a7 7 0 0 1 .34-.374c.006 0 .93 1.306 2.052 2.903l2.084 2.965.045.063h2.275c1.87 0 2.273-.003 2.266-.021-.008-.02-1.098-1.572-3.894-5.547-2.013-2.862-2.28-3.246-2.273-3.266.008-.019.282-.332 2.085-2.38l2-2.274 1.567-1.782c.022-.028-.016-.03-.65-.03h-.674l-.3.342a871 871 0 0 1-1.782 2.025c-.067.075-.405.458-.75.852a100 100 0 0 1-.803.91c-.148.172-.299.344-.99 1.127-.304.343-.32.358-.345.327-.015-.019-.904-1.282-1.976-2.808L6.365 1.85H1.8zm1.782.91 8.078 11.294c.772 1.08 1.413 1.973 1.425 1.984.016.017.241.02 1.05.017l1.03-.004-2.694-3.766L7.796 5.75 5.722 2.852l-1.039-.004-1.039-.004z&quot; clip-rule=&quot;evenodd&quot;/&gt;
+  &lt;/symbol&gt;
+&lt;/svg&gt;
+</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-README-md">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 README.md 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/README.md • 17 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-README-md')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-README-md"># React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev &amp; build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-App-jsx">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 App.jsx 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/App.jsx • 24 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-App-jsx')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-frontend-src-App-jsx', 5)">App</span></div>
+                                                </div>
+            <pre><code id="code-file-frontend-src-App-jsx">import { Routes, Route } from &#039;react-router-dom&#039;;
+import Navbar from &#039;./components/Navbar&#039;;
+import Home from &#039;./components/Home&#039;;
+import PropertyDetails from &#039;./components/PropertyDetails&#039;;
+
+const App = () =&gt; {
+  return (
+    &lt;div className=&quot;min-h-screen flex flex-col bg-gray-50&quot;&gt;
+      {/* Navbar always stays on top */}
+      &lt;Navbar /&gt;
+      
+      {/* Routes decide what goes in the main area */}
+      &lt;Routes&gt;
+        {/* FIX: Notice how there are no quotes around the curly braces here! */}
+        &lt;Route path=&quot;/&quot; element={&lt;Home /&gt;} /&gt;
+        
+        {/* If the URL is &quot;/property/123&quot;, show the details page for ID 123 */}
+        &lt;Route path=&quot;/property/:id&quot; element={&lt;PropertyDetails /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default App;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-assets-react-svg">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 react.svg 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/assets/react.svg • 1 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-assets-react-svg')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-src-assets-react-svg">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; aria-hidden=&quot;true&quot; role=&quot;img&quot; class=&quot;iconify iconify--logos&quot; width=&quot;35.93&quot; height=&quot;32&quot; preserveAspectRatio=&quot;xMidYMid meet&quot; viewBox=&quot;0 0 256 228&quot;&gt;&lt;path fill=&quot;#00D8FF&quot; d=&quot;M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621c6.238-30.281 2.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848a155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233C50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165a167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266c13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923a168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586c13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488c29.348-9.723 48.443-25.443 48.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365 70.984c-1.4.463-2.836.91-4.3 1.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11 9.31-21.767 12.459-31.957c2.619.758 5.16 1.557 7.61 2.4c23.69 8.156 38.14 20.213 38.14 29.504c0 9.896-15.606 22.743-40.946 31.14Zm-10.514 20.834c2.562 12.94 2.927 24.64 1.23 33.787c-1.524 8.219-4.59 13.698-8.382 15.893c-8.067 4.67-25.32-1.4-43.927-17.412a156.726 156.726 0 0 1-6.437-5.87c7.214-7.889 14.423-17.06 21.459-27.246c12.376-1.098 24.068-2.894 34.671-5.345a134.17 134.17 0 0 1 1.386 6.193ZM87.276 214.515c-7.882 2.783-14.16 2.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923 156.923 0 0 1 1.869-8.499c10.486 2.32 22.093 3.988 34.498 4.994c7.084 9.967 14.501 19.128 21.976 27.15a134.668 134.668 0 0 1-4.877 4.492c-9.933 8.682-19.886 14.842-28.658 17.94ZM50.35 144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322 13.897-21.212 37.076-29.293c2.813-.98 5.757-1.905 8.812-2.773c3.204 10.42 7.406 21.315 12.477 32.332c-5.137 11.18-9.399 22.249-12.634 32.792a134.718 134.718 0 0 1-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134 6.425-47.789c8.564-4.958 27.502 2.111 47.463 19.835a144.318 144.318 0 0 1 3.841 3.545c-7.438 7.987-14.787 17.08-21.808 26.988c-12.04 1.116-23.565 2.908-34.161 5.309a160.342 160.342 0 0 1-1.76-7.887Zm110.427 27.268a347.8 347.8 0 0 0-7.785-12.803c8.168 1.033 15.994 2.404 23.343 4.08c-2.206 7.072-4.956 14.465-8.193 22.045a381.151 381.151 0 0 0-7.365-13.322Zm-45.032-43.861c5.044 5.465 10.096 11.566 15.065 18.186a322.04 322.04 0 0 0-30.257-.006c4.974-6.559 10.069-12.652 15.192-18.18ZM82.802 87.83a323.167 323.167 0 0 0-7.227 13.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634 15.093-2.97 23.209-3.984a321.524 321.524 0 0 0-7.848 12.897Zm8.081 65.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3 5.045-14.885 8.298-22.6a321.187 321.187 0 0 0 7.257 13.246c2.594 4.48 5.28 8.868 8.038 13.147Zm37.542 31.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192 9.899.29 14.978.29c5.218 0 10.376-.117 15.453-.343c-4.985 6.774-10.018 12.97-15.028 18.486Zm52.198-57.817c3.422 7.8 6.306 15.345 8.596 22.52c-7.422 1.694-15.436 3.058-23.88 4.071a382.417 382.417 0 0 0 7.859-13.026a347.403 347.403 0 0 0 7.425-13.565Zm-16.898 8.101a358.557 358.557 0 0 1-12.281 19.815a329.4 329.4 0 0 1-23.444.823c-7.967 0-15.716-.248-23.178-.732a310.202 310.202 0 0 1-12.513-19.846h.001a307.41 307.41 0 0 1-10.923-20.627a310.278 310.278 0 0 1 10.89-20.637l-.001.001a307.318 307.318 0 0 1 12.413-19.761c7.613-.576 15.42-.876 23.31-.876H128c7.926 0 15.743.303 23.354.883a329.357 329.357 0 0 1 12.335 19.695a358.489 358.489 0 0 1 11.036 20.54a329.472 329.472 0 0 1-11 20.722Zm22.56-122.124c8.572 4.944 11.906 24.881 6.52 51.026c-.344 1.668-.73 3.367-1.15 5.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789 160.789 0 0 1 5.888-5.4c18.9-16.447 36.564-22.941 44.612-18.3ZM128 90.808c12.625 0 22.86 10.235 22.86 22.86s-10.235 22.86-22.86 22.86s-22.86-10.235-22.86-22.86s10.235-22.86 22.86-22.86Z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-assets-vite-svg">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 vite.svg 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/assets/vite.svg • 2 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-assets-vite-svg')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-src-assets-vite-svg">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;77&quot; height=&quot;47&quot; fill=&quot;none&quot; aria-labelledby=&quot;vite-logo-title&quot; viewBox=&quot;0 0 77 47&quot;&gt;&lt;title id=&quot;vite-logo-title&quot;&gt;Vite&lt;/title&gt;&lt;style&gt;.parenthesis{fill:#000}@media (prefers-color-scheme:dark){.parenthesis{fill:#fff}}&lt;/style&gt;&lt;path fill=&quot;#9135ff&quot; d=&quot;M40.151 45.71c-.663.844-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.493c-.92 0-1.457-1.04-.92-1.788l7.479-10.471c1.07-1.498 0-3.578-1.842-3.578H15.443c-.92 0-1.456-1.04-.92-1.788l9.696-13.576c.213-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.472c-1.07 1.497 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.087.89 1.83L40.153 45.712z&quot;/&gt;&lt;mask id=&quot;a&quot; width=&quot;48&quot; height=&quot;47&quot; x=&quot;14&quot; y=&quot;0&quot; maskUnits=&quot;userSpaceOnUse&quot; style=&quot;mask-type:alpha&quot;&gt;&lt;path fill=&quot;#000&quot; d=&quot;M40.047 45.71c-.663.843-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.389c-.92 0-1.457-1.04-.92-1.788l7.479-10.472c1.07-1.497 0-3.578-1.842-3.578H15.34c-.92 0-1.456-1.04-.92-1.788l9.696-13.575c.213-.297.556-.474.92-.474H53.93c.92 0 1.456 1.04.92 1.788L47.37 13.03c-1.07 1.498 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.088.89 1.831L40.049 45.712z&quot;/&gt;&lt;/mask&gt;&lt;g mask=&quot;url(#a)&quot;&gt;&lt;g filter=&quot;url(#b)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;14.704&quot; fill=&quot;#eee6ff&quot; rx=&quot;5.508&quot; ry=&quot;14.704&quot; transform=&quot;rotate(269.814 20.96 11.29)scale(-1 1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#c)&quot;&gt;&lt;ellipse cx=&quot;10.399&quot; cy=&quot;29.851&quot; fill=&quot;#eee6ff&quot; rx=&quot;10.399&quot; ry=&quot;29.851&quot; transform=&quot;rotate(89.814 -16.902 -8.275)scale(1 -1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#d)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;30.487&quot; fill=&quot;#8900ff&quot; rx=&quot;5.508&quot; ry=&quot;30.487&quot; transform=&quot;rotate(89.814 -19.197 -7.127)scale(1 -1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#e)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;30.599&quot; fill=&quot;#8900ff&quot; rx=&quot;5.508&quot; ry=&quot;30.599&quot; transform=&quot;rotate(89.814 -25.928 4.177)scale(1 -1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#f)&quot;&gt;&lt;ellipse cx=&quot;5.508&quot; cy=&quot;30.599&quot; fill=&quot;#8900ff&quot; rx=&quot;5.508&quot; ry=&quot;30.599&quot; transform=&quot;rotate(89.814 -25.738 5.52)scale(1 -1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#g)&quot;&gt;&lt;ellipse cx=&quot;14.072&quot; cy=&quot;22.078&quot; fill=&quot;#eee6ff&quot; rx=&quot;14.072&quot; ry=&quot;22.078&quot; transform=&quot;rotate(93.35 31.245 55.578)scale(-1 1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#h)&quot;&gt;&lt;ellipse cx=&quot;3.47&quot; cy=&quot;21.501&quot; fill=&quot;#8900ff&quot; rx=&quot;3.47&quot; ry=&quot;21.501&quot; transform=&quot;rotate(89.009 35.419 55.202)scale(-1 1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#i)&quot;&gt;&lt;ellipse cx=&quot;3.47&quot; cy=&quot;21.501&quot; fill=&quot;#8900ff&quot; rx=&quot;3.47&quot; ry=&quot;21.501&quot; transform=&quot;rotate(89.009 35.419 55.202)scale(-1 1)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#j)&quot;&gt;&lt;ellipse cx=&quot;14.592&quot; cy=&quot;9.743&quot; fill=&quot;#8900ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; transform=&quot;rotate(39.51 14.592 9.743)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#k)&quot;&gt;&lt;ellipse cx=&quot;61.728&quot; cy=&quot;-5.321&quot; fill=&quot;#8900ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; transform=&quot;rotate(37.892 61.728 -5.32)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#l)&quot;&gt;&lt;ellipse cx=&quot;55.618&quot; cy=&quot;7.104&quot; fill=&quot;#00c2ff&quot; rx=&quot;5.971&quot; ry=&quot;9.665&quot; transform=&quot;rotate(37.892 55.618 7.104)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#m)&quot;&gt;&lt;ellipse cx=&quot;12.326&quot; cy=&quot;39.103&quot; fill=&quot;#8900ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; transform=&quot;rotate(37.892 12.326 39.103)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#n)&quot;&gt;&lt;ellipse cx=&quot;12.326&quot; cy=&quot;39.103&quot; fill=&quot;#8900ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; transform=&quot;rotate(37.892 12.326 39.103)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#o)&quot;&gt;&lt;ellipse cx=&quot;49.857&quot; cy=&quot;30.678&quot; fill=&quot;#8900ff&quot; rx=&quot;4.407&quot; ry=&quot;29.108&quot; transform=&quot;rotate(37.892 49.857 30.678)&quot;/&gt;&lt;/g&gt;&lt;g filter=&quot;url(#p)&quot;&gt;&lt;ellipse cx=&quot;52.623&quot; cy=&quot;33.171&quot; fill=&quot;#00c2ff&quot; rx=&quot;5.971&quot; ry=&quot;15.297&quot; transform=&quot;rotate(37.892 52.623 33.17)&quot;/&gt;&lt;/g&gt;&lt;/g&gt;&lt;path d=&quot;M6.919 0c-9.198 13.166-9.252 33.575 0 46.789h6.215c-9.25-13.214-9.196-33.623 0-46.789zm62.424 0h-6.215c9.198 13.166 9.252 33.575 0 46.789h6.215c9.25-13.214 9.196-33.623 0-46.789&quot; class=&quot;parenthesis&quot;/&gt;&lt;defs&gt;&lt;filter id=&quot;b&quot; width=&quot;60.045&quot; height=&quot;41.654&quot; x=&quot;-5.564&quot; y=&quot;16.92&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;7.659&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;c&quot; width=&quot;90.34&quot; height=&quot;51.437&quot; x=&quot;-40.407&quot; y=&quot;-6.762&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;7.659&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;d&quot; width=&quot;79.355&quot; height=&quot;29.4&quot; x=&quot;-35.435&quot; y=&quot;2.801&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;e&quot; width=&quot;79.579&quot; height=&quot;29.4&quot; x=&quot;-30.84&quot; y=&quot;20.8&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;f&quot; width=&quot;79.579&quot; height=&quot;29.4&quot; x=&quot;-29.307&quot; y=&quot;21.949&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;g&quot; width=&quot;74.749&quot; height=&quot;58.852&quot; x=&quot;29.961&quot; y=&quot;-17.13&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;7.659&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;h&quot; width=&quot;61.377&quot; height=&quot;25.362&quot; x=&quot;37.754&quot; y=&quot;3.055&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;i&quot; width=&quot;61.377&quot; height=&quot;25.362&quot; x=&quot;37.754&quot; y=&quot;3.055&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;j&quot; width=&quot;56.045&quot; height=&quot;63.649&quot; x=&quot;-13.43&quot; y=&quot;-22.082&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;k&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;34.321&quot; y=&quot;-37.644&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;l&quot; width=&quot;33.541&quot; height=&quot;35.313&quot; x=&quot;38.847&quot; y=&quot;-10.552&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;m&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;-15.081&quot; y=&quot;6.78&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;n&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;-15.081&quot; y=&quot;6.78&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;o&quot; width=&quot;54.814&quot; height=&quot;64.646&quot; x=&quot;22.45&quot; y=&quot;-1.645&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;filter id=&quot;p&quot; width=&quot;39.409&quot; height=&quot;43.623&quot; x=&quot;32.919&quot; y=&quot;11.36&quot; color-interpolation-filters=&quot;sRGB&quot; filterUnits=&quot;userSpaceOnUse&quot;&gt;&lt;feFlood flood-opacity=&quot;0&quot; result=&quot;BackgroundImageFix&quot;/&gt;&lt;feBlend in=&quot;SourceGraphic&quot; in2=&quot;BackgroundImageFix&quot; result=&quot;shape&quot;/&gt;&lt;feGaussianBlur result=&quot;effect1_foregroundBlur_2002_17286&quot; stdDeviation=&quot;4.596&quot;/&gt;&lt;/filter&gt;&lt;/defs&gt;&lt;/svg&gt;
+</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-components-Hero-jsx">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 Hero.jsx 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/components/Hero.jsx • 31 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-components-Hero-jsx')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-frontend-src-components-Hero-jsx', 0)">Hero</span></div>
+                                                </div>
+            <pre><code id="code-file-frontend-src-components-Hero-jsx">const Hero = () =&gt; {
+  return (
+    &lt;div className=&quot;relative h-screen w-full&quot;&gt;
+      {/* Background Image with Dark Overlay */}
+      &lt;div 
+        className=&quot;absolute inset-0 bg-cover bg-center bg-no-repeat&quot;
+        style={{ 
+          backgroundImage: &#039;url(&quot;https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&amp;w=1470&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&quot;)&#039; 
+        }}
+      &gt;
+        &lt;div className=&quot;absolute inset-0 bg-black/40&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      {/* Hero Content */}
+      &lt;div className=&quot;relative h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 mt-10&quot;&gt;
+        &lt;h1 className=&quot;text-5xl md:text-7xl font-light text-white tracking-wide mb-6 drop-shadow-lg&quot;&gt;
+          Curated &lt;span className=&quot;font-bold text-gold&quot;&gt;Luxury&lt;/span&gt; Stays
+        &lt;/h1&gt;
+        &lt;p className=&quot;max-w-2xl text-lg md:text-xl text-gray-200 mb-10 tracking-wider font-light drop-shadow-md&quot;&gt;
+          Experience the world&#039;s most exclusive destinations, from wild safaris to private island escapes.
+        &lt;/p&gt;
+        
+        &lt;button className=&quot;bg-gold text-dark px-10 py-4 rounded-full text-sm uppercase tracking-[0.2em] font-bold hover:bg-white transition duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 transform&quot;&gt;
+          Explore Destinations
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Hero;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-components-Home-jsx">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 Home.jsx 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/components/Home.jsx • 13 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-components-Home-jsx')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-frontend-src-components-Home-jsx', 3)">Home</span></div>
+                                                </div>
+            <pre><code id="code-file-frontend-src-components-Home-jsx">import Hero from &#039;./Hero&#039;;
+import PropertyGrid from &#039;./PropertyGrid&#039;;
+
+const Home = () =&gt; {
+  return (
+    &lt;&gt;
+      &lt;Hero/&gt;
+      &lt;PropertyGrid/&gt;
+    &lt;/&gt;
+  );
+};
+
+export default Home;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-components-Navbar-jsx">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 Navbar.jsx 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/components/Navbar.jsx • 34 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-components-Navbar-jsx')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-frontend-src-components-Navbar-jsx', 0)">Navbar</span></div>
+                                                </div>
+            <pre><code id="code-file-frontend-src-components-Navbar-jsx">const Navbar = () =&gt; {
+  return (
+    &lt;nav className=&quot;fixed w-full top-0 bg-white/80 backdrop-blur-md shadow-sm z-50&quot;&gt;
+      &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8&quot;&gt;
+        &lt;div className=&quot;flex justify-between items-center h-20&quot;&gt;
+          
+          {/* Logo Section */}
+          &lt;div className=&quot;flex-shrink-0 cursor-pointer&quot;&gt;
+            &lt;span className=&quot;text-2xl font-light text-dark tracking-wide&quot;&gt;
+              Travel&lt;span className=&quot;font-bold text-gold&quot;&gt;Booking&lt;/span&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+
+          {/* Navigation Links */}
+          &lt;div className=&quot;hidden md:flex space-x-10 items-center&quot;&gt;
+            &lt;a href=&quot;#&quot; className=&quot;text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider&quot;&gt;Home&lt;/a&gt;
+            &lt;a href=&quot;#&quot; className=&quot;text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider&quot;&gt;Destinations&lt;/a&gt;
+            &lt;a href=&quot;#&quot; className=&quot;text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider&quot;&gt;Experiences&lt;/a&gt;
+          &lt;/div&gt;
+
+          {/* User Actions */}
+          &lt;div className=&quot;hidden md:flex&quot;&gt;
+            &lt;button className=&quot;bg-dark text-white px-8 py-2.5 rounded-full hover:bg-gold transition duration-300 tracking-wide text-sm font-medium shadow-md hover:shadow-lg&quot;&gt;
+              Sign In
+            &lt;/button&gt;
+          &lt;/div&gt;
+
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+  );
+};
+
+export default Navbar;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-components-PropertyDetails-jsx">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 PropertyDetails.jsx 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/components/PropertyDetails.jsx • 14 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-components-PropertyDetails-jsx')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-frontend-src-components-PropertyDetails-jsx', 2)">PropertyDetails</span></div>
+                                                </div>
+            <pre><code id="code-file-frontend-src-components-PropertyDetails-jsx">import { useParams } from &#039;react-router-dom&#039;;
+
+const PropertyDetails = () =&gt; {
+  // This hook grabs the specific property ID from the URL!
+  const { id } = useParams();
+
+  return (
+    &lt;div className=&quot;pt-24 min-h-screen flex items-center justify-center bg-gray-50&quot;&gt;
+      &lt;h1 className=&quot;text-3xl font-light&quot;&gt;Loading details for property ID: {id}&lt;/h1&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default PropertyDetails;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-components-PropertyGrid-jsx">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 PropertyGrid.jsx 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/components/PropertyGrid.jsx • 118 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-components-PropertyGrid-jsx')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-frontend-src-components-PropertyGrid-jsx', 3)">PropertyGrid</span><span class="outline-pill" onclick="scrollToLine('file-frontend-src-components-PropertyGrid-jsx', 11)">fetchProperties</span></div>
+                                                </div>
+            <pre><code id="code-file-frontend-src-components-PropertyGrid-jsx">import { useState, useEffect } from &#039;react&#039;;
+import { Link } from &#039;react-router-dom&#039;;
+
+const PropertyGrid = () =&gt; {
+  // Setup our state variables to hold the data, loading status, and errors
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch the data from your Node.js backend when the component loads
+  useEffect(() =&gt; {
+    const fetchProperties = async () =&gt; {
+      try {
+        const response = await fetch(&#039;http://localhost:5000/api/properties&#039;);
+        if (!response.ok) {
+          throw new Error(&#039;Failed to fetch properties from the engine.&#039;);
+        }
+        const result = await response.json();
+        
+        // Our backend sends the array of properties inside a &quot;data&quot; object
+        setProperties(result.data); 
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  // Show a luxury gold spinner while waiting for the database
+  if (loading) {
+    return (
+      &lt;div className=&quot;py-32 flex justify-center items-center bg-gray-50&quot;&gt;
+        &lt;div className=&quot;animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    );
+  }
+
+  // Show an error if the engine is turned off
+  if (error) {
+    return &lt;div className=&quot;text-center py-20 text-red-500 bg-gray-50 font-mono text-sm&quot;&gt;{error}&lt;/div&gt;;
+  }
+
+  return (
+    &lt;section className=&quot;py-24 bg-gray-50 px-4 sm:px-6 lg:px-8&quot;&gt;
+      &lt;div className=&quot;max-w-7xl mx-auto&quot;&gt;
+        
+        {/* Section Header */}
+        &lt;div className=&quot;text-center mb-16&quot;&gt;
+          &lt;h2 className=&quot;text-4xl font-light text-dark mb-4&quot;&gt;
+            Featured &lt;span className=&quot;font-bold text-gold&quot;&gt;Destinations&lt;/span&gt;
+          &lt;/h2&gt;
+          &lt;p className=&quot;text-gray-500 uppercase tracking-widest text-sm&quot;&gt;
+            Discover your next escape
+          &lt;/p&gt;
+        &lt;/div&gt;
+
+        {/* The Grid */}
+        &lt;div className=&quot;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10&quot;&gt;
+          {properties.map((property) =&gt; (
+            &lt;div key={property._id} className=&quot;bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 group cursor-pointer border border-gray-100&quot;&gt;
+              
+              {/* Image Container */}
+              &lt;div className=&quot;relative h-64 overflow-hidden&quot;&gt;
+                &lt;img 
+                  src={property.images[0]} 
+                  alt={property.title} 
+                  className=&quot;w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-in-out&quot;
+                /&gt;
+                &lt;div className=&quot;absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full font-semibold text-dark shadow-sm&quot;&gt;
+                  ${property.basePrice} &lt;span className=&quot;text-xs text-gray-500 font-normal&quot;&gt;/ night&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              
+              {/* Card Details */}
+              &lt;div className=&quot;p-8&quot;&gt;
+                &lt;div className=&quot;text-xs text-gold uppercase tracking-widest mb-2 font-semibold&quot;&gt;
+                  {property.location.city}, {property.location.country}
+                &lt;/div&gt;
+                &lt;h3 className=&quot;text-2xl font-light text-dark mb-3 group-hover:text-gold transition duration-300&quot;&gt;
+                  {property.title}
+                &lt;/h3&gt;
+                &lt;p className=&quot;text-gray-600 mb-6 text-sm leading-relaxed line-clamp-2&quot;&gt;
+                  {property.description}
+                &lt;/p&gt;
+                
+                {/* Amenities Pills */}
+                &lt;div className=&quot;flex flex-wrap gap-2 mb-8&quot;&gt;
+                  {property.amenities.slice(0, 3).map((amenity, index) =&gt; (
+                    &lt;span key={index} className=&quot;text-xs bg-gray-50 text-gray-600 px-3 py-1 rounded-full border border-gray-200&quot;&gt;
+                      {amenity}
+                    &lt;/span&gt;
+                  ))}
+                  {property.amenities.length &gt; 3 &amp;&amp; (
+                    &lt;span className=&quot;text-xs bg-gray-50 text-gray-600 px-3 py-1 rounded-full border border-gray-200&quot;&gt;
+                      +{property.amenities.length - 3}
+                    &lt;/span&gt;
+                  )}
+                &lt;/div&gt;
+
+                {/* FIX: Corrected Link syntax using curly braces and backticks */}
+                &lt;Link to={`/property/${property._id}`} className=&quot;block text-center w-full border border-dark text-dark py-3 rounded-full hover:bg-dark hover:text-white transition duration-300 tracking-wider text-sm font-medium uppercase&quot;&gt;
+                  View Details
+                &lt;/Link&gt;
+              &lt;/div&gt;
+              
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+    &lt;/section&gt;
+  );
+};
+
+export default PropertyGrid;</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-index-css">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 index.css 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/index.css • 10 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-index-css')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-src-index-css">@import &quot;tailwindcss&quot;;
+
+@theme {
+  --color-gold: #D4AF37;
+  --color-dark: #111827;
+}
+
+body {
+  background-color: #f9fafb; /* A soft, premium off-white background */
+}</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-src-main-jsx">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 main.jsx 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/src/main.jsx • 14 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-src-main-jsx')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-src-main-jsx">import { StrictMode } from &#039;react&#039;;
+import { createRoot } from &#039;react-dom/client&#039;;
+import { BrowserRouter } from &#039;react-router-dom&#039;; // &lt;-- Import BrowserRouter
+import &#039;./index.css&#039;;
+import App from &#039;./App.jsx&#039;;
+
+createRoot(document.getElementById(&#039;root&#039;)).render(
+  &lt;StrictMode&gt;
+    
+    &lt;BrowserRouter&gt; 
+      &lt;App/&gt;
+    &lt;/BrowserRouter&gt;
+  &lt;/StrictMode&gt;,
+)</code></pre>
+        </div>
+        <div class="file-section" id="file-frontend-vite-config-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 vite.config.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(frontend/vite.config.js • 11 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-frontend-vite-config-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-frontend-vite-config-js">import { defineConfig } from &#039;vite&#039;
+import react from &#039;@vitejs/plugin-react&#039;
+import tailwindcss from &#039;@tailwindcss/vite&#039;
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+})</code></pre>
+        </div>
+        <div class="file-section" id="file-middleware-authMiddleware-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 authMiddleware.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(middleware/authMiddleware.js • 40 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-middleware-authMiddleware-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-middleware-authMiddleware-js', 3)">protect</span></div>
+                                                </div>
+            <pre><code id="code-file-middleware-authMiddleware-js">const jwt = require(&#039;jsonwebtoken&#039;);
+const User = require(&#039;../models/User&#039;);
+
+const protect = async (req, res, next) =&gt; {
+    let token;
+
+    // 1. Check if the token exists in the &quot;Authorization&quot; header
+    // It usually comes in looking like: &quot;Bearer eyJhbGciOiJIUzI1...&quot;
+    if (req.headers.authorization &amp;&amp; req.headers.authorization.startsWith(&#039;Bearer&#039;)) {
+        // Split the string and grab just the scrambled token part
+        token = req.headers.authorization.split(&#039; &#039;)[1];
+    }
+
+    // 2. If there is no token, kick them out immediately
+    if (!token) {
+        return res.status(401).json({ 
+            success: false, 
+            message: &#039;Not authorized to access this route. Please log in.&#039; 
+        });
+    }
+
+    try {
+        // 3. Verify the token is mathematically valid and hasn&#039;t expired
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // 4. Find the user in the database using the ID hidden inside the token payload
+        req.user = await User.findById(decoded.id);
+
+        // 5. Open the velvet rope and let them through to the controller!
+        next();
+    } catch (error) {
+        // If the token is fake, expired, or tampered with, kick them out
+        return res.status(401).json({ 
+            success: false, 
+            message: &#039;Session invalid or expired. Please log in again.&#039; 
+        });
+    }
+};
+
+module.exports = { protect };</code></pre>
+        </div>
+        <div class="file-section" id="file-models-Booking-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 Booking.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(models/Booking.js • 38 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-models-Booking-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-models-Booking-js">const mongoose = require(&#039;mongoose&#039;);
+
+const bookingSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: &#039;User&#039;, // Links to the User model
+        required: true
+    },
+    property: {
+        type: mongoose.Schema.ObjectId,
+        ref: &#039;Property&#039;, // Links to the Property model
+        required: true
+    },
+    checkInDate: {
+        type: Date,
+        required: [true, &#039;Please add a check-in date&#039;]
+    },
+    checkOutDate: {
+        type: Date,
+        required: [true, &#039;Please add a check-out date&#039;]
+    },
+    totalPrice: {
+        type: Number,
+        required: true
+    },
+    status: {
+        type: String,
+        enum: [&#039;pending&#039;, &#039;confirmed&#039;, &#039;cancelled&#039;],
+        default: &#039;pending&#039;
+    },
+    paymentId: {
+        type: String // To store the Stripe or PayPal transaction ID later
+    }
+}, {
+    timestamps: true
+});
+
+module.exports = mongoose.model(&#039;Booking&#039;, bookingSchema);</code></pre>
+        </div>
+        <div class="file-section" id="file-models-Property-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 Property.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(models/Property.js • 44 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-models-Property-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-models-Property-js">const mongoose = require(&#039;mongoose&#039;);
+
+const propertySchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: [true, &#039;Please add a property title&#039;],
+        trim: true
+    },
+    description: {
+        type: String,
+        required: [true, &#039;Please add a description&#039;]
+    },
+    basePrice: {
+        type: Number,
+        required: [true, &#039;Please add a base price per night&#039;]
+    },
+    location: {
+        address: String,
+        city: {
+            type: String,
+            required: true
+        },
+        country: {
+            type: String,
+            default: &#039;Zambia&#039;
+        }
+    },
+    amenities: {
+        type: [String], // Array of strings like [&quot;WiFi&quot;, &quot;Pool&quot;]
+        default: []
+    },
+    images: {
+        type: [String], // Array of image URLs
+        default: []
+    },
+    maxGuests: {
+        type: Number,
+        required: true
+    }
+}, {
+    timestamps: true
+});
+
+module.exports = mongoose.model(&#039;Property&#039;, propertySchema);</code></pre>
+        </div>
+        <div class="file-section" id="file-models-User-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 User.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(models/User.js • 55 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-models-User-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-models-User-js">const mongoose = require(&#039;mongoose&#039;);
+const bcrypt = require(&#039;bcryptjs&#039;);
+const jwt = require(&#039;jsonwebtoken&#039;);
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, &#039;Please add a name&#039;]
+    },
+    email: {
+        type: String,
+        required: [true, &#039;Please add an email&#039;],
+        unique: true,
+        match: [
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            &#039;Please add a valid email&#039;
+        ]
+    },
+    password: {
+        type: String,
+        required: [true, &#039;Please add a password&#039;],
+        minlength: 6,
+        select: false // Ensures password isn&#039;t returned in general API queries
+    },
+    role: {
+        type: String,
+        enum: [&#039;customer&#039;, &#039;admin&#039;],
+        default: &#039;customer&#039;
+    }
+}, {
+    timestamps: true
+});
+
+// Encrypt password using bcrypt BEFORE saving
+userSchema.pre(&#039;save&#039;, async function(next) {
+    if (!this.isModified(&#039;password&#039;)) {
+        next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Match user entered password to hashed password in database
+userSchema.methods.matchPassword = async function(enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Sign JWT and return
+userSchema.methods.getSignedJwtToken = function() {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE
+    });
+};
+
+module.exports = mongoose.model(&#039;User&#039;, userSchema);</code></pre>
+        </div>
+        <div class="file-section" id="file-package-json">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 package.json 
+                   <span style="color: #9ca3af; font-size: 12px;">(package.json • 27 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-package-json')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-package-json">{
+  &quot;name&quot;: &quot;travelbooking&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;node server.js&quot;,
+    &quot;dev&quot;: &quot;nodemon server.js&quot;
+  },
+  &quot;keywords&quot;: [],
+  &quot;author&quot;: &quot;&quot;,
+  &quot;license&quot;: &quot;ISC&quot;,
+  &quot;type&quot;: &quot;commonjs&quot;,
+  &quot;dependencies&quot;: {
+    &quot;bcryptjs&quot;: &quot;^3.0.3&quot;,
+    &quot;cors&quot;: &quot;^2.8.6&quot;,
+    &quot;dotenv&quot;: &quot;^17.4.2&quot;,
+    &quot;express&quot;: &quot;^5.2.1&quot;,
+    &quot;jsonwebtoken&quot;: &quot;^9.0.3&quot;,
+    &quot;mongodb&quot;: &quot;^7.2.0&quot;,
+    &quot;mongoose&quot;: &quot;^9.6.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;nodemon&quot;: &quot;^3.1.14&quot;
+  }
+}
+</code></pre>
+        </div>
+        <div class="file-section" id="file-routes-authRoutes-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 authRoutes.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(routes/authRoutes.js • 9 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-routes-authRoutes-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-routes-authRoutes-js">const express = require(&#039;express&#039;);
+const { register, login } = require(&#039;../controllers/authController&#039;);
+
+const router = express.Router();
+
+router.post(&#039;/register&#039;, register);
+router.post(&#039;/login&#039;, login);
+
+module.exports = router;</code></pre>
+        </div>
+        <div class="file-section" id="file-routes-bookingRoutes-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 bookingRoutes.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(routes/bookingRoutes.js • 12 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-routes-bookingRoutes-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-routes-bookingRoutes-js">const express = require(&#039;express&#039;);
+const { createBooking, getMyBookings } = require(&#039;../controllers/bookingController&#039;);
+// We will build this &#039;protect&#039; middleware in the next step to ensure only logged-in users can book
+const { protect } = require(&#039;../middleware/authMiddleware&#039;);
+
+const router = express.Router();
+
+// Apply the &#039;protect&#039; middleware to all booking routes
+router.post(&#039;/&#039;, protect, createBooking);
+router.get(&#039;/mybookings&#039;, protect, getMyBookings);
+
+module.exports = router;</code></pre>
+        </div>
+        <div class="file-section" id="file-routes-propertyRoutes-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 propertyRoutes.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(routes/propertyRoutes.js • 11 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-routes-propertyRoutes-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-routes-propertyRoutes-js">const express = require(&#039;express&#039;);
+const { createProperty, getProperties } = require(&#039;../controllers/propertyController&#039;);
+
+const router = express.Router();
+
+// Map the routes to the controller functions
+router.route(&#039;/&#039;)
+    .get(getProperties)
+    .post(createProperty);
+
+module.exports = router;</code></pre>
+        </div>
+        <div class="file-section" id="file-seeder-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 seeder.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(seeder.js • 45 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-seeder-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-seeder-js', 27)">importData</span></div>
+                                                </div>
+            <pre><code id="code-file-seeder-js">const mongoose = require(&#039;mongoose&#039;);
+const dotenv = require(&#039;dotenv&#039;);
+const connectDB = require(&#039;./config/db&#039;);
+const Property = require(&#039;./models/Property&#039;);
+
+// Load environment variables so we can connect to the database
+dotenv.config();
+
+// Connect to MongoDB
+connectDB();
+
+const sampleProperty = [
+    {
+        title: &quot;The Royal Zambezi Lodge&quot;,
+        description: &quot;An intimate, luxury safari lodge situated on the banks of the mighty Zambezi River.&quot;,
+        basePrice: 850.00,
+        location: {
+            address: &quot;Lower Zambezi National Park&quot;,
+            city: &quot;Chiawa&quot;,
+            country: &quot;Zambia&quot;
+        },
+        amenities: [&quot;Private Plunge Pool&quot;, &quot;Spa&quot;, &quot;Guided Safaris&quot;, &quot;Wi-Fi&quot;],
+        images: [&quot;https://example.com/images/zambezi-1.jpg&quot;],
+        maxGuests: 2
+    }
+];
+
+const importData = async () =&gt; {
+    try {
+        // Clear out any accidental old data first
+        await Property.deleteMany(); 
+        
+        // Insert our luxury lodge
+        await Property.insertMany(sampleProperty);
+        
+        console.log(&#039;Luxury Data Imported Successfully!&#039;);
+        process.exit();
+    } catch (error) {
+        console.error(`Error importing data: ${error.message}`);
+        process.exit(1);
+    }
+};
+
+// Execute the function
+importData();</code></pre>
+        </div>
+        <div class="file-section" id="file-server-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 server.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(server.js • 33 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-server-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-server-js">const express = require(&#039;express&#039;);
+const dotenv = require(&#039;dotenv&#039;);
+const cors = require(&#039;cors&#039;);
+const connectDB = require(&#039;./config/db&#039;);
+
+// Load environment variables
+dotenv.config();
+
+// Connect to MongoDB
+connectDB();
+
+// Initialize Express
+const app = express();
+
+// Middleware to parse JSON data and allow cross-origin requests
+app.use(express.json());
+app.use(cors());
+
+// --- ROUTE MOUNTING ---
+app.use(&#039;/api/properties&#039;, require(&#039;./routes/propertyRoutes&#039;));
+app.use(&#039;/api/auth&#039;, require(&#039;./routes/authRoutes&#039;));
+app.use(&#039;/api/bookings&#039;, require(&#039;./routes/bookingRoutes&#039;)); // &lt;-- Add this new line
+
+// A simple test route
+app.get(&#039;/&#039;, (req, res) =&gt; {
+    res.send(&#039;Travel Booking API is running...&#039;);
+});
+
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =&gt; {
+    console.log(`Server is running in luxury mode on port ${PORT}`);
+});</code></pre>
+        </div>
+        <div class="file-section" id="file-Tasks-TODO">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 Tasks.TODO 
+                   <span style="color: #9ca3af; font-size: 12px;">(Tasks.TODO • 1 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-Tasks-TODO')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+            <pre><code id="code-file-Tasks-TODO"></code></pre>
+        </div>
+        <div class="file-section" id="file-testAuth-js">
+            <div class="file-header">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                   📄 testAuth.js 
+                   <span style="color: #9ca3af; font-size: 12px;">(testAuth.js • 30 lines)</span>
+                </span>
+                <button class="copy-btn" onclick="copyCode('file-testAuth-js')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            
+                                                <div class="file-outline">
+                                                    <span class="outline-title">⚡ Outline:</span>
+                                                    <div class="outline-pills"><span class="outline-pill" onclick="scrollToLine('file-testAuth-js', 0)">registerAdmin</span></div>
+                                                </div>
+            <pre><code id="code-file-testAuth-js">const registerAdmin = async () =&gt; {
+    try {
+        const response = await fetch(&#039;http://localhost:5000/api/auth/register&#039;, {
+            method: &#039;POST&#039;,
+            headers: {
+                &#039;Content-Type&#039;: &#039;application/json&#039;
+            },
+            body: JSON.stringify({
+                name: &#039;Gralix Admin&#039;,
+                email: &#039;admin@gralix.com&#039;,
+                password: &#039;luxuryPassword123!&#039;,
+                role: &#039;admin&#039;
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log(&#039;✅ Admin Account Created Successfully!&#039;);
+            console.log(&#039;Here is your VIP Access Token (JWT):&#039;);
+            console.log(data.token);
+        } else {
+            console.error(&#039;❌ Registration Failed:&#039;, data.message);
+        }
+    } catch (error) {
+        console.error(&#039;Error:&#039;, error);
+    }
+};
+
+registerAdmin();</code></pre>
+        </div>
+    </div>
+
+    <nav id="side-nav" class="side-nav">
+        <h3>Quick Navigation</h3>
+        <a href="#" id="back-to-top" class="back-to-top">⬆ Back to Top</a>
+        <div class="directory-tree" style="background: transparent; border: none; padding: 0; margin: 0; box-shadow: none;">📁 config/
+  <a href="#file-config-db-js" class="tree-link">📄 db.js</a>
+📁 controllers/
+  <a href="#file-controllers-authController-js" class="tree-link">📄 authController.js</a>
+  <a href="#file-controllers-bookingController-js" class="tree-link">📄 bookingController.js</a>
+  <a href="#file-controllers-propertyController-js" class="tree-link">📄 propertyController.js</a>
+📁 frontend/
+  <a href="#file-frontend-eslint-config-js" class="tree-link">📄 eslint.config.js</a>
+  <a href="#file-frontend-index-html" class="tree-link">📄 index.html</a>
+  <a href="#file-frontend-package-json" class="tree-link">📄 package.json</a>
+  📁 public/
+    <a href="#file-frontend-public-favicon-svg" class="tree-link">📄 favicon.svg</a>
+    <a href="#file-frontend-public-icons-svg" class="tree-link">📄 icons.svg</a>
+  <a href="#file-frontend-README-md" class="tree-link">📄 README.md</a>
+  📁 src/
+    <a href="#file-frontend-src-App-jsx" class="tree-link">📄 App.jsx</a>
+    📁 assets/
+      <a href="#file-frontend-src-assets-react-svg" class="tree-link">📄 react.svg</a>
+      <a href="#file-frontend-src-assets-vite-svg" class="tree-link">📄 vite.svg</a>
+    📁 components/
+      <a href="#file-frontend-src-components-Hero-jsx" class="tree-link">📄 Hero.jsx</a>
+      <a href="#file-frontend-src-components-Home-jsx" class="tree-link">📄 Home.jsx</a>
+      <a href="#file-frontend-src-components-Navbar-jsx" class="tree-link">📄 Navbar.jsx</a>
+      <a href="#file-frontend-src-components-PropertyDetails-jsx" class="tree-link">📄 PropertyDetails.jsx</a>
+      <a href="#file-frontend-src-components-PropertyGrid-jsx" class="tree-link">📄 PropertyGrid.jsx</a>
+    <a href="#file-frontend-src-index-css" class="tree-link">📄 index.css</a>
+    <a href="#file-frontend-src-main-jsx" class="tree-link">📄 main.jsx</a>
+  <a href="#file-frontend-vite-config-js" class="tree-link">📄 vite.config.js</a>
+📁 middleware/
+  <a href="#file-middleware-authMiddleware-js" class="tree-link">📄 authMiddleware.js</a>
+📁 models/
+  <a href="#file-models-Booking-js" class="tree-link">📄 Booking.js</a>
+  <a href="#file-models-Property-js" class="tree-link">📄 Property.js</a>
+  <a href="#file-models-User-js" class="tree-link">📄 User.js</a>
+<a href="#file-package-json" class="tree-link">📄 package.json</a>
+📁 routes/
+  <a href="#file-routes-authRoutes-js" class="tree-link">📄 authRoutes.js</a>
+  <a href="#file-routes-bookingRoutes-js" class="tree-link">📄 bookingRoutes.js</a>
+  <a href="#file-routes-propertyRoutes-js" class="tree-link">📄 propertyRoutes.js</a>
+<a href="#file-seeder-js" class="tree-link">📄 seeder.js</a>
+<a href="#file-server-js" class="tree-link">📄 server.js</a>
+<a href="#file-Tasks-TODO" class="tree-link">📄 Tasks.TODO</a>
+<a href="#file-testAuth-js" class="tree-link">📄 testAuth.js</a>
+</div>
+    </nav>
+
+    <script>
+        hljs.highlightAll();
+
+        function copyCode(id) {
+            const codeNode = document.getElementById('code-' + id);
+            const code = codeNode.textContent;
+            const btn = document.querySelector('#' + id + ' .copy-btn');
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerHTML;
+                btn.classList.add('success');
+                btn.innerHTML = '✓ Copied!';
+                
+                setTimeout(() => {
+                    btn.classList.remove('success');
+                    btn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        // --- Minimap Scroll & Flash Logic ---
+        function scrollToLine(safeId, lineIndex) {
+            const codeNode = document.getElementById('code-' + safeId);
+            if (!codeNode) return;
+            
+            const style = window.getComputedStyle(codeNode);
+            const lineHeight = parseFloat(style.lineHeight) || 21; 
+            const paddingTop = parseFloat(style.paddingTop) || 20;
+            
+            const relativeY = paddingTop + (lineIndex * lineHeight);
+            const absoluteY = codeNode.getBoundingClientRect().top + window.scrollY + relativeY;
+            
+            window.scrollTo({ top: absoluteY - 150, behavior: 'smooth' });
+
+            const flash = document.createElement('div');
+            flash.style.position = 'absolute';
+            flash.style.left = '0';
+            flash.style.right = '0';
+            flash.style.top = relativeY + 'px';
+            flash.style.height = lineHeight + 'px';
+            flash.style.backgroundColor = 'rgba(59, 130, 246, 0.4)';
+            flash.style.pointerEvents = 'none';
+            flash.style.transition = 'opacity 1s ease-out';
+            flash.style.zIndex = '10';
+            
+            const preNode = codeNode.parentElement;
+            preNode.appendChild(flash);
+            
+            setTimeout(() => { flash.style.opacity = '0'; }, 800);
+            setTimeout(() => { flash.remove(); }, 1800);
+        }
+
+        const sideNav = document.getElementById('side-nav');
+        const sourceCodeHeader = document.getElementById('source-code-header');
+
+        window.addEventListener('scroll', () => {
+            if (sourceCodeHeader.getBoundingClientRect().top <= 20) {
+                sideNav.classList.add('visible');
+            } else {
+                sideNav.classList.remove('visible');
+            }
+        });
+
+        const fileSections = document.querySelectorAll('.file-section');
+        const navLinks = document.querySelectorAll('#side-nav .tree-link');
+
+        const observerOptions = { root: null, rootMargin: '-15% 0px -85% 0px', threshold: 0 };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const currentId = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + currentId) {
+                            link.classList.add('active');
+                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        fileSections.forEach(section => observer.observe(section));
+
+        document.getElementById('back-to-top').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Node dependencies
+node_modules/
+
+# Environment variables (CRITICAL SECURITY)
+.env
+
+# Optional: Ignore Mac system files
+.DS_Store
