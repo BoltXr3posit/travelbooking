@@ -19,7 +19,8 @@ app.use(cors());
 // --- ROUTE MOUNTING ---
 app.use('/api/properties', require('./routes/propertyRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/bookings', require('./routes/bookingRoutes')); // <-- Add this new line
+app.use('/api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/payments', require('./routes/paymentRoutes')); // <-- ADD THIS LINE
 
 // A simple test route
 app.get('/', (req, res) => {

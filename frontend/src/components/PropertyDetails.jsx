@@ -2,6 +2,13 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+// --- NEW STRIPE IMPORTS ---
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import PaymentModal from './PaymentModal';
+
+// Load Stripe outside of component render to avoid recreating the Promise on every render
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -17,16 +24,18 @@ const PropertyDetails = () => {
   // New state to capture user input
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
+  
+  // --- NEW STRIPE STATE ---
+  const [clientSecret, setClientSecret] = useState('');
+  const [totalPrice, setTotalPrice] = useState(0);
 
-  const handleReserveClick = async (e) => { // <-- Don't forget to add 'async' here!
+  const handleReserveClick = async (e) => { 
     e.preventDefault();
     
-    // 1. Did they select dates?
     if (!checkInDate || !checkOutDate) {
       return showToast('Please select your check-in and check-out dates.', 'error');
     }
 
-    // 2. Are they logged in?
     if (!token) {
       showToast('Please create an account to secure this reservation.', 'error');
       localStorage.setItem('returnTo', location.pathname);
@@ -34,18 +43,18 @@ const PropertyDetails = () => {
       return;
     }
 
-    // 3. Connect to the Booking Engine!
     try {
-      showToast('Processing your reservation...', 'success'); // A nice initial message
+      showToast('Initializing secure checkout...', 'success'); 
       
-      const response = await fetch('https://travelbooking-one.vercel.app/api/bookings', {
+      // We hit our NEW payment intent route!
+      const response = await fetch('https://travelbooking-one.vercel.app/api/payments/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // <-- This is the velvet rope! We pass the VIP token.
+          'Authorization': `Bearer ${token}` 
         },
         body: JSON.stringify({
-          property: id,
+          propertyId: id,
           checkInDate,
           checkOutDate
         })
@@ -54,19 +63,15 @@ const PropertyDetails = () => {
       const data = await response.json();
 
       if (data.success) {
-        showToast('Reservation secured successfully! Welcome to luxury.', 'success');
-        
-        // Let's teleport them to their new dashboard so they can see the booking
-        setTimeout(() => {
-          navigate('/mybookings');
-        }, 1500); 
+        // We got the secret key! This will trigger the modal to open.
+        setClientSecret(data.clientSecret);
+        setTotalPrice(data.totalPrice);
       } else {
-        // If the backend rejects it (e.g. check-out date is before check-in date)
         showToast(data.message, 'error');
       }
     } catch (error) {
-      console.error('Booking failed:', error);
-      showToast('Could not process reservation. Please try again.', 'error');
+      console.error('Checkout initialization failed:', error);
+      showToast('Could not initiate checkout. Please try again.', 'error');
     }
   };
 
@@ -180,6 +185,19 @@ const PropertyDetails = () => {
           </div>
 
         </div>
+        
+        {/* --- ADDED AT THE VERY BOTTOM OF THE RETURN BLOCK --- */}
+        {clientSecret && (
+          <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
+            <PaymentModal 
+              clientSecret={clientSecret}
+              totalPrice={totalPrice}
+              token={token}
+              closeModal={() => setClientSecret('')}
+              bookingData={{ propertyId: id, checkInDate, checkOutDate }}
+            />
+          </Elements>
+        )}
       </div>
     </div>
   );
