@@ -51,4 +51,4 @@ const createPaymentIntent = async (req, res) => {
     }
 };
 
-module.exports = { createPaymentIntent };
+module.exports = { createPaymentIntent }; 
