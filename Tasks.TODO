@@ -1,3 +1,46 @@
+1. User Features (The "Luxury" Experience)
+OAuth (Google) Integration: Enabling "Sign in with Google" for streamlined onboarding.  
+
+Profile Management: A dedicated page for users to update their name, avatar, phone number, address, and password.  
+
+Advanced Search & Filtering: Implementing full-text search and filters for destination, date, price range, category (tour/hotel/package), and group size.  
+
+Favourites / Wishlist: Allowing users to save luxury packages to a personal wishlist for later.  
+
+Reviews & Ratings: A post-trip system where users can submit star ratings and text reviews for destinations.  
+
+2. Booking & Payment Polish
+Multi-Step Booking Wizard: A flow that allows users to select dates, add travellers, choose add-ons, and review before paying.  
+
+Seat / Slot Management: Real-time availability tracking in the database to prevent overbooking a property.  
+
+Booking Modification: Logic to allow users to change dates or traveller counts before a specific cutoff date.  
+
+Cancellation & Refund Flow: Policy-based cancellation with an automated refund trigger via the payment gateway API.  
+
+Invoice & Voucher Generation: Automated PDF generation (using tools like PDFKit) for invoices and booking vouchers.  
+
+3. Admin & Analytics
+Revenue Dashboard: A visual section in your Admin Panel with charts for daily/monthly revenue, booking counts, and top-performing packages.  
+
+Promo & Coupons: A system for admins to create discount codes with specific expiry and usage rules.  
+
+User Management: An interface for admins to search, deactivate users, or assign new admin roles.  
+
+Content Management (CMS): Tools to manage home page banners, featured packages, and testimonials without editing code.  
+
+4. Technical & Non-Functional Requirements
+Email System: Integration with Nodemailer and SendGrid for OTPs and booking confirmations.  
+
+Notification Centre: Both in-app and email notifications for booking status changes.  
+
+Performance Optimization: Compound MongoDB indexing and implementing lazy-loading for images.  
+
+Testing Suite: Reaching the target of 80%+ line coverage using Jest and Supertest.  
+
+Deployment Hardening: Final Docker configuration, NGINX reverse proxy setup, and SSL certification.
+
+
 The Road Ahead
 We have built a strong foundation, but a world-class platform needs more features before it's ready for high-end clients. Here is a roadmap of what we can build next to turn this into a fully functional booking engine:
 
@@ -6,7 +49,6 @@ We have built a strong foundation, but a world-class platform needs more feature
 
 
 
-Auth Pages: We need the visual Login and Registration screens so users can actually sign in to those accounts we created on the backend.
 
 2. The Engine (Backend Focus)
 
@@ -19,10 +61,3 @@ Payments integration: Eventually, we will need to integrate Stripe so users can 
 Which piece of the puzzle would you like to tackle next? We can stay visual and build the Property Details Page, or we can dive back into the engine and lock down the Authentication Middleware.
 
 The Authentication Phase
-The Auth Context: We need to create a secure vault in React to store the user's details and their JWT token after they log in, so every page knows they are authenticated.
-
-The Login & Register Pages: We need to build the sleek, glassmorphic forms where users can type in their credentials and create an account.
-
-The Token Handshake: We need to program that "Sign In" button in your Navbar to open the login page, get the token from your Node.js engine, and unlock the "Reserve Now" button.
-
-Are you ready to build the frontend Authentication system to finally let users log in?
