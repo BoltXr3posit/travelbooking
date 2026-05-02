@@ -1,17 +1,20 @@
 import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
+// 1. ADDED THE MISSING IMPORT HERE
+import { useToast } from '../context/ToastContext'; 
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-  // Extract the engine connection from our vault
-  const { login } = useContext(AuthContext);
+  // 2. Extract our new googleSignIn function
+  const { login, googleSignIn } = useContext(AuthContext);
+  const { showToast } = useToast();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Fire the engine!
     login(email, password);
   };
 
@@ -30,46 +33,53 @@ const Login = () => {
         <div className="bg-white py-8 px-4 shadow-xl border border-gray-50 sm:rounded-3xl sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-medium">
-                Email Address
-              </label>
+              <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-medium">Email Address</label>
               <div className="mt-1">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50"
-                  placeholder="vip@example.com"
-                />
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50" placeholder="vip@example.com" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-medium">
-                Password
-              </label>
+              <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-medium">Password</label>
               <div className="mt-1">
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50"
-                  placeholder="••••••••"
-                />
+                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-gold outline-none transition bg-gray-50" placeholder="••••••••" />
               </div>
             </div>
 
             <div>
-              <button
-                type="submit"
-                className="w-full bg-dark text-white py-4 rounded-full font-bold uppercase tracking-[0.15em] text-sm hover:bg-gold transition duration-300 shadow-lg hover:shadow-xl mt-4"
-              >
+              <button type="submit" className="w-full bg-dark text-white py-4 rounded-full font-bold uppercase tracking-[0.15em] text-sm hover:bg-gold transition duration-300 shadow-lg hover:shadow-xl mt-4">
                 Sign In
               </button>
             </div>
           </form>
+
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-400 uppercase tracking-widest text-xs">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              {/* 2. FIXED THE ONSUCCESS PROP SYNTAX HERE */}
+              <GoogleLogin 
+                onSuccess={(credentialResponse) => {
+                  // Pass the token Google gives us to our Node engine!
+                  googleSignIn(credentialResponse.credential);
+                }}
+                onError={() => {
+                  showToast('Google login popup was closed or failed.', 'error');
+                }}
+                theme="filled_black"
+                shape="pill"
+                size="large"
+                text="continue_with"
+              />
+            </div>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
