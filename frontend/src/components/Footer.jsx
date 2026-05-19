@@ -9,7 +9,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="space-y-4">
             <Link to="/" className="text-3xl font-light tracking-wide block">
-              Travel<span className="font-bold text-gold">Booking</span>
+              Apartment<span className="font-bold text-gold">Finder</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed font-light mt-6">
               Curating the world's most exclusive destinations and bespoke experiences for the modern luxury traveler.
