@@ -58,7 +58,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-xs font-light tracking-wide mb-4 md:mb-0 uppercase">
-            &copy; {new Date().getFullYear()} TravelBooking. All rights reserved.
+            &copy; {new Date().getFullYear()} Apartment Finder. All rights reserved.
           </p>
           <div className="flex space-x-6 text-xs font-bold uppercase tracking-widest">
             <a href="#" className="text-gray-500 hover:text-gold transition duration-300">Instagram</a>
