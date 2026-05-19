@@ -19,7 +19,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" onClick={closeMenu} className="flex-shrink-0 cursor-pointer">
             <span className="text-2xl font-light text-dark tracking-wide">
-              Travel<span className="font-bold text-gold">Booking</span>
+              Swift<span className="font-bold text-gold">Stay</span>
             </span>
           </Link>
 
