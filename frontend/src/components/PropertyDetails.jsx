@@ -111,7 +111,7 @@ const PropertyDetails = () => {
         
         {/* Back navigation */}
         <Link to="/" className="text-xs text-gray-500 hover:text-gold uppercase tracking-widest mb-8 inline-block transition duration-300">
-          &larr; Back to Destinations
+          &larr; Back to Apartments
         </Link>
 
         <div className="flex flex-col lg:flex-row gap-12">

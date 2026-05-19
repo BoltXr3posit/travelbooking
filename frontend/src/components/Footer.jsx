@@ -12,7 +12,7 @@ const Footer = () => {
               Apartment<span className="font-bold text-gold">Finder</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed font-light mt-6">
-              Curating the world's most exclusive destinations and bespoke experiences for the modern luxury traveler.
+              Bringing you home away from home in the most desirable locations.
             </p>
           </div>
 
@@ -21,7 +21,7 @@ const Footer = () => {
             <h4 className="text-sm font-bold uppercase tracking-[0.15em] mb-6 text-gold">Explore</h4>
             <ul className="space-y-4">
               <li><Link to="/" className="text-gray-400 hover:text-white transition duration-300 text-sm uppercase tracking-wider">Home</Link></li>
-              <li><Link to="/destinations" className="text-gray-400 hover:text-white transition duration-300 text-sm uppercase tracking-wider">Destinations</Link></li>
+              <li><Link to="/destinations" className="text-gray-400 hover:text-white transition duration-300 text-sm uppercase tracking-wider">Apartments</Link></li>
               <li><Link to="/experiences" className="text-gray-400 hover:text-white transition duration-300 text-sm uppercase tracking-wider">Experiences</Link></li>
             </ul>
           </div>

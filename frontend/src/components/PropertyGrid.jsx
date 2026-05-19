@@ -50,7 +50,7 @@ const PropertyGrid = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl font-light text-dark mb-4">
-            Featured <span className="font-bold text-gold">Destinations</span>
+            Featured <span className="font-bold text-gold">Apartments</span>
           </h2>
           <p className="text-gray-500 uppercase tracking-widest text-sm">
             Discover your next escape

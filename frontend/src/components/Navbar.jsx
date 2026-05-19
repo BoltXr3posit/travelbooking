@@ -26,7 +26,7 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-10 items-center">
             <Link to="/" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Home</Link>
-            <Link to="/destinations" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Destinations</Link>
+            <Link to="/destinations" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Apartments</Link>
             <Link to="/experiences" className="text-gray-600 hover:text-gold transition duration-300 text-sm uppercase tracking-wider">Experiences</Link>
           </div>
 
@@ -77,7 +77,7 @@ const Navbar = () => {
       <div className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-screen border-t border-gray-100' : 'max-h-0'}`}>
         <div className="px-6 pt-4 pb-8 space-y-4 bg-white shadow-xl">
           <Link to="/" onClick={closeMenu} className="block text-gray-600 py-2 text-base uppercase tracking-widest">Home</Link>
-          <Link to="/destinations" onClick={closeMenu} className="block text-gray-600 py-2 text-base uppercase tracking-widest">Destinations</Link>
+          <Link to="/destinations" onClick={closeMenu} className="block text-gray-600 py-2 text-base uppercase tracking-widest">Apartments</Link>
           <Link to="/experiences" onClick={closeMenu} className="block text-gray-600 py-2 text-base uppercase tracking-widest">Experiences</Link>
           
           <div className="pt-4 border-t border-gray-50">

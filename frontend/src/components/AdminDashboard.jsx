@@ -168,7 +168,7 @@ const AdminDashboard = () => {
         <div className="flex justify-between items-end mb-12">
           <div>
             <h1 className="text-4xl font-light text-dark mb-2">Portfolio <span className="font-bold text-gold">Command</span></h1>
-            <p className="text-gray-500 uppercase tracking-widest text-sm">Manage luxury destinations</p>
+            <p className="text-gray-500 uppercase tracking-widest text-sm">Manage Apartments</p>
           </div>
           <button onClick={() => openModal()} className="bg-dark text-white px-8 py-3 rounded-full hover:bg-gold transition duration-300 tracking-wide text-sm font-medium uppercase shadow-md">
             + Add Property

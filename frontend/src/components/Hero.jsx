@@ -14,14 +14,14 @@ const Hero = () => {
       {/* Hero Content */}
       <div className="relative h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8 mt-10">
         <h1 className="text-5xl md:text-7xl font-light text-white tracking-wide mb-6 drop-shadow-lg">
-          Curated <span className="font-bold text-gold">Luxury</span> Stays
+          Curated <span className="font-bold text-gold">Luxury</span> Apartments
         </h1>
         <p className="max-w-2xl text-lg md:text-xl text-gray-200 mb-10 tracking-wider font-light drop-shadow-md">
-          Experience the world's most exclusive destinations, from wild safaris to private island escapes.
+          Experience the world's most exclusive apartments, from modern city centers to serene countryside retreats.
         </p>
         
         <button className="bg-gold text-dark px-10 py-4 rounded-full text-sm uppercase tracking-[0.2em] font-bold hover:bg-white transition duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 transform">
-          Explore Destinations
+          Explore Apartments
         </button>
       </div>
     </div>
